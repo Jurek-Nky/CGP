@@ -38,10 +38,12 @@ private slots:
 
     void setAnimationSpeed(int value);
     void setLocalRotation(bool value);
+    void setEarthSize(int value);
 
 
 protected:
     virtual void keyPressEvent(QKeyEvent* event);
+
 };
 
 #endif // MAINWINDOW_H
