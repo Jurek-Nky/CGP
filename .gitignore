@@ -1,3 +1,5 @@
 images/
 cmake/
 CMakeFiles/
+.idea/
+cmake-build-debug/
