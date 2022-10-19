@@ -30,7 +30,7 @@ Planet::Planet(std::string name,
                unsigned int daysPerYear,
                std::string textureLocation) :
         Drawable(name),
-        _radius(radius * 0.5),
+        _radius(radius),
         _distance(distance),
         _localRotation(0),
         _localRotationSpeed(0),
@@ -53,7 +53,6 @@ void Planet::init() {
     /// TODO: init children, orbit and path
     for (auto &i: _children) {
         i->init();
-        std::cout << this->_name << " : " << i->_name << std::endl;
     }
 }
 
@@ -118,14 +117,17 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     modelview_stack.push(modelViewMatrix);
 
     //global rotation
-    float rotationFactor = 2 * glm::pi<float>() / float(_daysPerYear) * _localRotationSpeed / 60 / 60 ;
+    float rotationFactor = 2 * glm::pi<float>() / float(_daysPerYear) * _localRotationSpeed / 60;
     _globalRotationAngle = std::fmod((_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * rotationFactor),
                                      (2 * glm::pi<float>()));
+    float x = _center[0] + (_distance * glm::cos(_globalRotationAngle));
+    float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
+    modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
 
-    modelview_stack.top() = glm::translate(modelview_stack.top(),
-                                           glm::vec3(_center[0] + (_distance * glm::cos(_globalRotationAngle)), 0,
-                                                     _center[2] + (_distance * glm::sin(_globalRotationAngle))));
-
+    //update ceter for all children
+    for (auto &i: _children) {
+        i->_center = glm::vec3(x, 0, y);
+    }
     // rotate around y-axis
     modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
     _modelViewMatrix = glm::mat4(modelview_stack.top());
@@ -193,7 +195,6 @@ void Planet::createObject() {
     VERIFY(CG::checkError());
 
     // Hint: save the number of vertices for drawing
-
 }
 
 std::string Planet::getVertexShader() const {
