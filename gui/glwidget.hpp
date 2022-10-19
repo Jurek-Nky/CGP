@@ -15,12 +15,16 @@
 #include <QOpenGLWidget>
 #include <QOpenGLContext>
 #include <QTimer>
+#include "glm/vec2.hpp"
+#include "glm/detail/type_vec3.hpp"
 
 /*
  * Forward decleration
  */
 class Planet;
+
 class Skybox;
+
 class CoordinateSystem;
 
 /**
@@ -29,9 +33,8 @@ class CoordinateSystem;
  * This class handles everything that has to do with the GL Widget.
  * It also serves as a manager for the drawable objects
  */
-class GLWidget : public QOpenGLWidget
-{
-    Q_OBJECT
+class GLWidget : public QOpenGLWidget {
+Q_OBJECT
 
 private:
 
@@ -42,7 +45,11 @@ private:
     std::shared_ptr<Skybox> _skybox;                /**< Skybox (not part of the hierarchy */
     std::shared_ptr<CoordinateSystem> _coordSystem; /**< Coordinate system (not part of the hierarchy) */
 
+    glm::vec3 _viewPoint = glm::vec3(0.0, 0.0, 5.0);
+    glm::vec2 _mousePos;
+
 private slots:
+
     /**
      * @brief animateGL updates the scene
      *
@@ -55,8 +62,7 @@ public:
     /**
      * @brief setGLFormat sets the GL format to 4.0 core
      */
-    static void setGLFormat ()
-    {
+    static void setGLFormat() {
         QSurfaceFormat format;
         format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
         format.setSwapInterval(::getenv("COREGL_FPS") ? 0 : 1);
@@ -69,7 +75,7 @@ public:
      * @brief GLWidget constructor
      * @param parent the parent widget
      */
-    GLWidget(QWidget*& parent);
+    GLWidget(QWidget *&parent);
 
     /**
      * @brief show opens the widget
@@ -101,19 +107,19 @@ public:
      * @brief mousePressEvent automatically called whenever the mouse is pressed
      * @param event the QMouseEvenent containing all relevant data
      */
-    virtual void mousePressEvent(QMouseEvent * event) override;
+    virtual void mousePressEvent(QMouseEvent *event) override;
 
     /**
      * @brief mouseReleaseEvent automatically called whenever the mouse is released
      * @param event the QMouseEvenent containing all relevant data
      */
-    virtual void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
 
     /**
      * @brief mousePressEvent automatically called whenever the mouse is moved
      * @param event the QMouseEvenent containing all relevant data
      */
-    virtual void mouseMoveEvent(QMouseEvent* event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
 
     /**
      * @brief mousePressEvent automatically called whenever the mouse wheel is used

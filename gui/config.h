@@ -14,7 +14,7 @@ public:
 
     static float animationSpeed;     /**< the number of steps per ms */
 
-    static float earthSize;
+    static float camZoom;
 
     static bool localRotation;       /**< rotate the planets locally */
 };
