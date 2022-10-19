@@ -46,7 +46,12 @@ private:
     std::shared_ptr<CoordinateSystem> _coordSystem; /**< Coordinate system (not part of the hierarchy) */
 
     glm::vec3 _viewPoint = glm::vec3(0.0, 0.0, 5.0);
+    glm::vec3 _viewPointCenter = glm::vec3(0.0, 0.0, 0.0);
     glm::vec2 _mousePos;
+    // 0 = disabled,
+    // 1 = rotation around the center,
+    // 2 = movement of view center as well as view vector
+    int _moveMode = 0;
 
 private slots:
 
@@ -130,6 +135,9 @@ public:
 public slots:
 
 
+    void leftClickMove(glm::vec2 mouseDelta);
+
+    void middleClickMove(glm::vec2 mouseDelta);
 };
 
 #endif
