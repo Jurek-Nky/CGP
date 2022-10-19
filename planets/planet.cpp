@@ -5,6 +5,7 @@
 #define GLM_FORCE_RADIANS
 #define GLM_SWIZZLE
 
+#include <cmath>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -33,7 +34,9 @@ Planet::Planet(std::string name,
         _distance(distance),
         _localRotation(0),
         _localRotationSpeed(0),
-        _daysPerYear(daysPerYear) {
+        _daysPerYear(daysPerYear),
+        _center(glm::vec3(0,0,0)),
+        _globalRotationAngle(0) {
     _localRotationSpeed = 1.0f / hoursPerDay; // for local rotation:one step equals one hour
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
@@ -99,12 +102,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     // calculate new local rotation
     if (Config::localRotation)
         _localRotation += elapsedTimeMs * _localRotationSpeed * Config::animationSpeed;
-
-    // keep rotation between 0 and 360
-    while (_localRotation >= 360.f)
-        _localRotation -= 360.0f;
-    while (_localRotation < 0.0f)
-        _localRotation += 360.0f;
+    _localRotation = std::fmod(_localRotation, 360.0f);
 
     // apply local rotation to model view matrix
     // Hint: The stack is currently useless, but could be useful for you
@@ -112,8 +110,14 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 
     modelview_stack.push(modelViewMatrix);
 
-    modelview_stack.top() = glm::scale(modelview_stack.top(),
-                                       glm::vec3(Config::earthSize, Config::earthSize, Config::earthSize));
+    //global rotation
+    _globalRotationAngle = std::fmod((_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * 0.001),
+                                     (2 * glm::pi<float>()));
+
+    modelview_stack.top() = glm::translate(modelview_stack.top(),
+                                           glm::vec3(_center[0] + (_distance * glm::cos(_globalRotationAngle)), 0,
+                                                     _center[2]+ (_distance * glm::sin(_globalRotationAngle))));
+
     // rotate around y-axis
     modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
     _modelViewMatrix = glm::mat4(modelview_stack.top());

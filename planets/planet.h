@@ -2,25 +2,28 @@
 #define PLANET_H
 
 #include "planets/drawable.h"
+#include "glm/detail/type_vec3.hpp"
 
 #include <memory>
 #include <vector>
 
 class Orbit;
+
 class Path;
+
 class Sun;
+
 class Cone;
 
-class Planet : public Drawable
-{
+class Planet : public Drawable {
 public:
     Planet(std::string name = "UNNAMED PLANET",
-            float radius = 1.0f,
-            float distance = 10.0f,
-            float hoursPerDay = 24.0f,
-            unsigned int daysPerYear = 365,
-            std::string textureLocation = ":/res/images/earth.bmp"
-            );
+           float radius = 1.0f,
+           float distance = 10.0f,
+           float hoursPerDay = 24.0f,
+           unsigned int daysPerYear = 365,
+           std::string textureLocation = ":/res/images/earth.bmp"
+    );
 
     /**
      * @see Drawable::init()
@@ -139,16 +142,21 @@ protected:
      * precalculated.
      */
     virtual void updatePath(float elapsedTimeMs, glm::mat4 modelViewMatrix);
+
     /**
      * @brief addPathPoint adds the current position to the path
      */
     virtual void addPathPoint();
+
     /**
      * @brief createPath creates the path of this planet (and its children)
      *
      * Hint: This should only be called once
      */
     virtual void createPath();
+
+    float _globalRotationAngle;
+    glm::vec3 _center;
 };
 
 #endif // PLANET_H

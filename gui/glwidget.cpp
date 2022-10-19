@@ -41,7 +41,7 @@ GLWidget::GLWidget(QWidget *&parent) : QOpenGLWidget(parent),//static_cast<QWidg
      * DO NOT CHANGE days/year *
      * *************************/
                                                         // radius, distance, h/day, days/year
-    _earth          = std::make_shared<Planet> ("Erde",     1.0,    0.0,    24.0,   1, ":/res/images/earth.bmp");
+    _earth          = std::make_shared<Planet> ("Erde",     1.0,    1.5,    24.0,   1, ":/res/images/earth.bmp");
     auto moon       = std::make_shared<Planet>("Mond",      0.215,  2.0,    27.3,   27, ":/res/images/moon.bmp");
     auto sun        = std::make_shared<Sun>("Sonne",        1.2,    6.0,    50.0,   350, ":/res/images/sun.bmp");
     auto mercury    = std::make_shared<Planet>("Merkur",    0.34,   2.32,   1407.5, 150, ":/res/images/mercury.bmp");

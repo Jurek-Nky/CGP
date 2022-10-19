@@ -27,7 +27,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setEarthSize(int value)
 {
-    Config::earthSize = float(value) / 10.0f;
+    Config::earthSize = float(value) ;
     QString title = QString("Earthsize: ") + QString::number(Config::earthSize, 'x', 1) + "x";
     this->ui->groupBox_2->setTitle(title);
 }
