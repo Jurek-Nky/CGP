@@ -159,9 +159,9 @@ background-color: rgb(0, 0, 0);</string>
           <string notr="true">background-color: rgb(25, 25, 25);</string>
          </property>
          <property name="title">
-          <string>Earthsize: 1</string>
+          <string>Zoom: 1</string>
          </property>
-         <widget class="QSlider" name="sliderEarthSize">
+         <widget class="QSlider" name="sliderCamZoom">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -192,13 +192,13 @@ background-color: rgb(0, 0, 0);</string>
            <number>0</number>
           </property>
           <property name="maximum">
-           <number>40</number>
+           <number>100</number>
           </property>
           <property name="singleStep">
            <number>1</number>
           </property>
           <property name="value">
-           <number>2</number>
+           <number>5</number>
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>

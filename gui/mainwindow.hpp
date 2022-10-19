@@ -38,7 +38,7 @@ private slots:
 
     void setAnimationSpeed(int value);
     void setLocalRotation(bool value);
-    void setEarthSize(int value);
+    void setCamZoom(int value);
 
 
 protected:

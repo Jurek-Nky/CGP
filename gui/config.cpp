@@ -6,7 +6,7 @@
 
 float Config::animationSpeed = 1.0f;
 
-float Config::earthSize = 1.0f;
+float Config::camZoom = 5.0f;
 
 bool Config::localRotation = true;
 

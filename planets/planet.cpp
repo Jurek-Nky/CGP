@@ -5,6 +5,7 @@
 #define GLM_FORCE_RADIANS
 #define GLM_SWIZZLE
 
+#include <cmath>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -29,11 +30,13 @@ Planet::Planet(std::string name,
                unsigned int daysPerYear,
                std::string textureLocation) :
         Drawable(name),
-        _radius(radius),
+        _radius(radius * 0.5),
         _distance(distance),
         _localRotation(0),
         _localRotationSpeed(0),
-        _daysPerYear(daysPerYear) {
+        _daysPerYear(daysPerYear),
+        _center(glm::vec3(0, 0, 0)),
+        _globalRotationAngle(0) {
     _localRotationSpeed = 1.0f / hoursPerDay; // for local rotation:one step equals one hour
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
@@ -48,6 +51,10 @@ void Planet::init() {
     /// TODO: load texture
 
     /// TODO: init children, orbit and path
+    for (auto &i: _children) {
+        i->init();
+        std::cout << this->_name << " : " << i->_name << std::endl;
+    }
 }
 
 void Planet::recreate() {
@@ -82,6 +89,9 @@ void Planet::draw(glm::mat4 projection_matrix) const {
 
     // call draw
     glDrawElements(GL_TRIANGLES, 4800, GL_UNSIGNED_INT, 0);
+    for (const auto &i: _children) {
+        i->draw(projection_matrix);
+    }
 
     // unbin vertex array object
     glBindVertexArray(0);
@@ -99,12 +109,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     // calculate new local rotation
     if (Config::localRotation)
         _localRotation += elapsedTimeMs * _localRotationSpeed * Config::animationSpeed;
-
-    // keep rotation between 0 and 360
-    while (_localRotation >= 360.f)
-        _localRotation -= 360.0f;
-    while (_localRotation < 0.0f)
-        _localRotation += 360.0f;
+    _localRotation = std::fmod(_localRotation, 360.0f);
 
     // apply local rotation to model view matrix
     // Hint: The stack is currently useless, but could be useful for you
@@ -112,13 +117,25 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 
     modelview_stack.push(modelViewMatrix);
 
-    modelview_stack.top() = glm::scale(modelview_stack.top(),
-                                       glm::vec3(Config::earthSize, Config::earthSize, Config::earthSize));
+    //global rotation
+    float rotationFactor = 2 * glm::pi<float>() / float(_daysPerYear) * _localRotationSpeed / 60 / 60 ;
+    _globalRotationAngle = std::fmod((_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * rotationFactor),
+                                     (2 * glm::pi<float>()));
+
+    modelview_stack.top() = glm::translate(modelview_stack.top(),
+                                           glm::vec3(_center[0] + (_distance * glm::cos(_globalRotationAngle)), 0,
+                                                     _center[2] + (_distance * glm::sin(_globalRotationAngle))));
+
     // rotate around y-axis
     modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
     _modelViewMatrix = glm::mat4(modelview_stack.top());
 
     modelview_stack.pop();
+
+
+    for (const auto &i: _children) {
+        i->update(elapsedTimeMs, modelViewMatrix);
+    }
 }
 
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
@@ -148,6 +165,9 @@ void Planet::createObject() {
         glGenVertexArrays(1, &_vertexArrayObject);
     glBindVertexArray(_vertexArrayObject);
 
+    for (auto &position: positions) {
+        position = glm::vec3(position[0] * _radius, position[1] * _radius, position[2] * _radius);
+    };
     // fill vertex array object with data
     GLuint position_buffer;
     glGenBuffers(1, &position_buffer);

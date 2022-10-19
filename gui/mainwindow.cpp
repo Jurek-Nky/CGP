@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // connect ui elements to slots
     connect(this->ui->sliderAnimationSpeed, SIGNAL(valueChanged(int)), this, SLOT(setAnimationSpeed(int)));
-    connect(this->ui->sliderEarthSize, SIGNAL(valueChanged(int)), this, SLOT(setEarthSize(int)));
+    connect(this->ui->sliderCamZoom, SIGNAL(valueChanged(int)), this, SLOT(setCamZoom(int)));
     connect(this->ui->checkBoxLocalRotation, SIGNAL(clicked(bool)), this, SLOT(setLocalRotation(bool)));
 }
 
@@ -25,10 +25,10 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::setEarthSize(int value)
+void MainWindow::setCamZoom(int value)
 {
-    Config::earthSize = float(value) / 10.0f;
-    QString title = QString("Earthsize: ") + QString::number(Config::earthSize, 'x', 1) + "x";
+    Config::camZoom = float(value) ;
+    QString title = QString("zoom: ") + QString::number(Config::camZoom, 'x', 1) + "x";
     this->ui->groupBox_2->setTitle(title);
 }
 
