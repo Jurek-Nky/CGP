@@ -15,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // connect ui elements to slots
     connect(this->ui->sliderAnimationSpeed, SIGNAL(valueChanged(int)), this, SLOT(setAnimationSpeed(int)));
-    connect(this->ui->sliderCamZoom, SIGNAL(valueChanged(int)), this, SLOT(setCamZoom(int)));
     connect(this->ui->checkBoxLocalRotation, SIGNAL(clicked(bool)), this, SLOT(setLocalRotation(bool)));
 }
 
@@ -25,18 +24,11 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::setCamZoom(int value)
-{
-    Config::camZoom = float(value) ;
-    QString title = QString("zoom: ") + QString::number(Config::camZoom, 'x', 1) + "x";
-    this->ui->groupBox_2->setTitle(title);
-}
-
 void MainWindow::setAnimationSpeed(int value)
 {
     Config::animationSpeed = float(value) / 2.0f;
     QString title = QString("Animation: ") + QString::number(Config::animationSpeed, 'x', 1) + "x";
-    this->ui->groupBox_4->setTitle(title);
+    this->ui->animationBox->setTitle(title);
 }
 
 void MainWindow::setLocalRotation(bool value)

@@ -38,7 +38,6 @@ private slots:
 
     void setAnimationSpeed(int value);
     void setLocalRotation(bool value);
-    void setCamZoom(int value);
 
 
 protected:
