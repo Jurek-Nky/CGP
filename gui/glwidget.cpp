@@ -133,22 +133,38 @@ void GLWidget::paintGL() {
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
     // ignore if it was not the left mouse button
-    if (!(event->button() & Qt::LeftButton))
-        return;
+    if (event->button() & Qt::LeftButton)
+        _moveMode = 1;
+    else if (event->button() & Qt::MiddleButton)
+        _moveMode = 2;
     /// TODO: handle left press here
     _mousePos = glm::vec2(event->pos().x(), event->pos().y());
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
     // ignore if it was not the left mouzse button
-    if (!(event->button() & Qt::LeftButton))
-        return;
+//    if (!(event->button() & Qt::LeftButton))
+//        return;
     /// TODO: handle left release here
+    _moveMode = 0;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     /// TODO: handle camera movement here
+    //calculating mouseDelta
     glm::vec2 mouseDelta = glm::vec2(glm::vec2(event->pos().x(), event->pos().y()) - _mousePos);
+
+    if (_moveMode == 1)
+        leftClickMove(mouseDelta);
+    else if (_moveMode == 2)
+        middleClickMove(mouseDelta);
+
+    // saving mouse position for new delta calc
+    _mousePos = glm::vec2(event->pos().x(), event->pos().y());
+}
+
+void GLWidget::leftClickMove(glm::vec2 mouseDelta) {
+
     glm::vec3 UP = glm::vec3(0, 1, 0);
 
     // rotating viewpoint around UP vector
@@ -157,9 +173,12 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     // rotating viewpoint around normal vector of viewpoint and Up vector
     glm::vec3 rotationVec = glm::cross(UP, _viewPoint);
     _viewPoint = glm::mat3(glm::rotate(mouseDelta.y * 0.01f, rotationVec)) * _viewPoint;
+}
 
-    // saving mouse position for new delta calc
-    _mousePos = glm::vec2(event->pos().x(), event->pos().y());
+void GLWidget::middleClickMove(glm::vec2 mouseDelta) {
+    glm::vec3 translationVec = glm::vec3(mouseDelta.x * -0.1, mouseDelta.y * 0.1, 0.0);
+//    _viewPoint = _viewPoint + translationVec;
+    _viewPointCenter = _viewPointCenter + translationVec;
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
@@ -181,9 +200,11 @@ void GLWidget::animateGL() {
     // calculate current modelViewMatrix for the default camera
     /// TODO: use your camera logic here
     glm::mat4 modelViewMatrix = glm::lookAt(
-            glm::vec3(_viewPoint[0] * Config::camZoom, _viewPoint[1] * Config::camZoom,
-                      _viewPoint[2] * Config::camZoom),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(
+                    _viewPoint[0] * Config::camZoom,
+                    _viewPoint[1] * Config::camZoom,
+                    _viewPoint[2] * Config::camZoom),
+            glm::vec3(_viewPointCenter[0], _viewPointCenter[1], _viewPointCenter[2]),
             glm::vec3(0.0, 1.0, 0.0));
 
     // update drawables
