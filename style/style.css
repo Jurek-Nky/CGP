@@ -1,0 +1,78 @@
+/*-----QGroupBox-----*/
+QGroupBox
+{
+    border: 1px solid;
+    border-color: #1d1d1d;
+    border-radius: 4px;
+    margin-top: 23px;
+
+}
+
+
+QGroupBox::title
+{
+    background-color: #002b2b;
+    color: #fff;
+    subcontrol-position: top left;
+    subcontrol-origin: margin;
+    padding: 5px;
+    min-width: 100px;
+    border: 1px solid #1d1d1d;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom: none;
+
+}
+
+/*-----QPushButton-----*/
+QPushButton
+{
+    background-color: #4891b4;
+    color: #fff;
+    min-width: 80px;
+    border-radius: 4px;
+    padding: 5px;
+
+}
+
+
+QPushButton::flat
+{
+    background-color: transparent;
+    border: none;
+    color: #000;
+
+}
+
+
+QPushButton::disabled
+{
+    background-color: #606060;
+    color: #959595;
+    border-color: #051a39;
+
+}
+
+
+QPushButton::hover
+{
+    background-color: #54aad3;
+    border: 1px solid #46a2da;
+
+}
+
+
+QPushButton::pressed
+{
+    background-color: #2385b4;
+    border: 1px solid #46a2da;
+
+}
+
+
+QPushButton::checked
+{
+    background-color: #bd5355;
+    border: 1px solid #bd5355;
+
+}

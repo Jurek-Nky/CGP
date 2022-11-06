@@ -14,9 +14,6 @@
    <string>GraPra 2015 - Tycho Brahe</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <property name="styleSheet">
-    <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(50, 50, 50, 255), stop:1 rgba(128, 128, 128, 255));</string>
-   </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
      <widget class="GLWidget" name="openGLWidget">
@@ -35,22 +32,18 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(0, 0, 0);</string>
-      </property>
+     <widget class="QGroupBox" name="optionsBox">
       <property name="title">
        <string>Optionen</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QCheckBox" name="checkBoxLocalRotation">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+        <widget class="QCheckBox" name="checkBoxLighting">
+         <property name="styleSheet">
+          <string notr="true"/>
          </property>
          <property name="text">
-          <string>Lokale Rotation</string>
+          <string>Beleuchtung(Sonne)</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -58,73 +51,98 @@ background-color: rgb(0, 0, 0);</string>
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+        <widget class="QCheckBox" name="checkBoxGrid">
+         <property name="styleSheet">
+          <string notr="true"/>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Minimum</enum>
+         <property name="text">
+          <string>Gitternetz</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
+         <property name="checked">
+          <bool>true</bool>
          </property>
-        </spacer>
+        </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>90</height>
-          </size>
+        <widget class="QCheckBox" name="checkBoxLocalRotation">
+         <property name="enabled">
+          <bool>true</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(25, 25, 25);</string>
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>locale Rotation</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBoxGlobalRotation">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>globale Rotation</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBoxCoorSystem">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Koord. System</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBoxShowPaths">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Umlaufbahnen</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="animationBox">
+         <property name="styleSheet">
+          <string notr="true"/>
          </property>
          <property name="title">
           <string>Animation: 1.0x</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QSlider" name="sliderAnimationSpeed">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
             <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>40</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>2</number>
+             <string/>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="tickPosition">
-             <enum>QSlider::TicksAbove</enum>
-            </property>
-            <property name="tickInterval">
-             <number>1</number>
             </property>
            </widget>
           </item>
@@ -132,84 +150,187 @@ background-color: rgb(0, 0, 0);</string>
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Minimum</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>90</height>
-          </size>
-         </property>
+        <widget class="QGroupBox" name="deathStarBox">
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(25, 25, 25);</string>
+          <string notr="true"/>
          </property>
          <property name="title">
-          <string>Zoom: 1</string>
+          <string>Todesstern</string>
          </property>
-         <widget class="QSlider" name="sliderCamZoom">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>155</width>
-            <height>31</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>30</height>
-           </size>
-          </property>
-          <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="minimum">
-           <number>0</number>
-          </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="singleStep">
-           <number>1</number>
-          </property>
-          <property name="value">
-           <number>5</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="tickPosition">
-           <enum>QSlider::TicksAbove</enum>
-          </property>
-          <property name="tickInterval">
-           <number>1</number>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QCheckBox" name="checkBoxDeathStarActive">
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="text">
+             <string>aktivieren</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxDeathStarPreview">
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="text">
+             <string>Vorschau</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="sliderDeathStarLaserRad">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="sliderDeathStarLaserLen">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="pathBox">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="title">
+          <string>Pfad</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QCheckBox" name="checkBoxPathPlanet">
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="text">
+             <string>CheckBox</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="selectPathPlanet">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="currentText">
+             <string notr="true"/>
+            </property>
+            <property name="placeholderText">
+             <string notr="true"/>
+            </property>
+            <property name="duplicatesEnabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="resolutionBox">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="title">
+          <string>Auflösung</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="2">
+           <widget class="QSpinBox" name="spinnerV">
+            <property name="styleSheet">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QSpinBox" name="spinnerRing">
+            <property name="styleSheet">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QSpinBox" name="spinnerU">
+            <property name="styleSheet">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelU">
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="text">
+             <string>U:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelV">
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="text">
+             <string>V:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labelRing">
+            <property name="styleSheet">
+             <string/>
+            </property>
+            <property name="text">
+             <string>Ring:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonCamReset">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Reset Camera</string>
+         </property>
         </widget>
        </item>
        <item>
@@ -217,13 +338,10 @@ background-color: rgb(0, 0, 0);</string>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::MinimumExpanding</enum>
-         </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>0</height>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -239,7 +357,7 @@ background-color: rgb(0, 0, 0);</string>
      <x>0</x>
      <y>0</y>
      <width>971</width>
-     <height>32</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
