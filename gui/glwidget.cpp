@@ -176,7 +176,7 @@ void GLWidget::leftClickMove(glm::vec2 mouseDelta) {
 }
 
 void GLWidget::middleClickMove(glm::vec2 mouseDelta) {
-    glm::vec3 translationVec = glm::vec3(mouseDelta.x * 0.1, mouseDelta.y * 0.1, 0.0);
+    glm::vec3 translationVec = glm::vec3(mouseDelta.x * -0.1, mouseDelta.y * 0.1, 0.0);
 //    _viewPoint = _viewPoint + translationVec;
     _viewPointCenter = _viewPointCenter + translationVec;
 }
