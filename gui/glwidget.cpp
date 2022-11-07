@@ -200,12 +200,6 @@ void GLWidget::animateGL() {
     // calculate current modelViewMatrix for the default camera
     /// TODO: use your camera logic here
 
-    if (Config::resetCamEvent){
-        Config::viewPoint = glm::vec3(0,0,5);
-        Config::viewPointCenter = glm::vec3(0,0,0);
-        Config::resetCamEvent = false;
-    }
-
     glm::mat4 modelViewMatrix = glm::lookAt(
             glm::vec3(
                     Config::viewPoint[0] * Config::camZoom,
