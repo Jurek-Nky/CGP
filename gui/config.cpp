@@ -11,6 +11,7 @@ float Config::camZoom = 5.0f;
 bool Config::localRotationEnable = true;
 bool Config::globalRotationEnable = true;
 bool Config::gridEnable = true;
+bool Config::coordSysEnable = true;
 bool Config::lightingEnable = true;
 bool Config::orbitEnable = true;
 

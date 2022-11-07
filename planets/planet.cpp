@@ -106,7 +106,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 
 
     // calculate new local rotation
-    if (Config::localRotation)
+    if (Config::localRotationEnable)
         _localRotation += elapsedTimeMs * _localRotationSpeed * Config::animationSpeed;
     _localRotation = std::fmod(_localRotation, 360.0f);
 
@@ -117,9 +117,12 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     modelview_stack.push(modelViewMatrix);
 
     //global rotation
-    float rotationFactor = 2 * glm::pi<float>() / float(_daysPerYear) * _localRotationSpeed / 60;
-    _globalRotationAngle = std::fmod((_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * rotationFactor),
-                                     (2 * glm::pi<float>()));
+    if (Config::globalRotationEnable){
+        float rotationFactor = 2 * glm::pi<float>() / float(_daysPerYear) * _localRotationSpeed / 60;
+        _globalRotationAngle = std::fmod((_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * rotationFactor),
+                                         (2 * glm::pi<float>()));
+    }
+
     float x = _center[0] + (_distance * glm::cos(_globalRotationAngle));
     float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
     modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
@@ -128,6 +131,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     for (auto &i: _children) {
         i->_center = glm::vec3(x, 0, y);
     }
+
     // rotate around y-axis
     modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
     _modelViewMatrix = glm::mat4(modelview_stack.top());
