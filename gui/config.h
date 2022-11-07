@@ -29,9 +29,9 @@ public:
 
     static bool planetPathEnable[12];
 
-    static float resolutionU;
-    static float resolutionV;
-    static float resolutionRing;
+    static int resolutionU;
+    static int resolutionV;
+    static int resolutionRing;
 };
 
 #endif // CONFIG_H

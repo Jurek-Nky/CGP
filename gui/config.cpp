@@ -35,6 +35,6 @@ bool Config::planetPathEnable[] = {false,       // earth
 };
 
 
-float Config::resolutionU = 1.0;
-float Config::resolutionV = 1.0;
-float Config::resolutionRing = 1.0;
+int Config::resolutionU = 40;
+int Config::resolutionV = 20;
+int Config::resolutionRing = 10;
