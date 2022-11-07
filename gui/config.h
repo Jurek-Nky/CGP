@@ -12,11 +12,25 @@
 class Config{
 public:
 
-    static float animationSpeed;     /**< the number of steps per ms */
-
     static float camZoom;
+    static bool localRotationEnable;
+    static bool globalRotationEnable;
+    static bool gridEnable;
+    static bool lightingEnable;
+    static bool orbitEnable;
 
-    static bool localRotation;       /**< rotate the planets locally */
+    static float animationSpeed;
+
+    static bool deathStarActive;
+    static bool deathStarPreviewEnable;
+    static float deathStarLaserLen;
+    static float deathStarLaserRad;
+
+    static bool planetPathEnable[12];
+
+    static float resolutionU;
+    static float resolutionV;
+    static float resolutionRing;
 };
 
 #endif // CONFIG_H

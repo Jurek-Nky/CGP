@@ -36,9 +36,31 @@ private slots:
      * Define slots to connect the ui elements with
      */
 
-    void setAnimationSpeed(int value);
+    // checkbox options
     void setLocalRotation(bool value);
+    void setGlobalRotation(bool value);
+    void setGrid(bool value);
+    void setCoorSys(bool value);
+    void setLighting(bool value);
+    void setOrbit(bool value);
 
+    // animations
+    void setAnimationSpeed(int value);
+
+    // deathStar
+   void setDeathStarActive(bool value);
+   void setDeathStarPreview(bool value);
+   void setDeathStarLaserLen(int value);
+   void setDeathStarLaserRad(int value);
+
+   // paths
+   void setPathActive(bool value);
+   void setPathPlanet(int value);
+
+    // resolution
+    void setResolutionU(int value);
+    void setResolutionV(int value);
+    void setResolutionRing(int value);
 
 protected:
     virtual void keyPressEvent(QKeyEvent* event);
