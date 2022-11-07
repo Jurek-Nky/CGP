@@ -16,6 +16,7 @@ public:
     static bool localRotationEnable;
     static bool globalRotationEnable;
     static bool gridEnable;
+    static bool coordSysEnable;
     static bool lightingEnable;
     static bool orbitEnable;
 
