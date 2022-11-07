@@ -52,8 +52,13 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->selectPathPlanet->addItem("callisto",11);
 
     connect(this->ui->spinnerU, SIGNAL(valueChanged(int)),this, SLOT(setResolutionU(int)));
+    this->ui->spinnerU->setValue(Config::resolutionU);
+    this->ui->spinnerU->setRange(4,1000);
     connect(this->ui->spinnerV, SIGNAL(valueChanged(int)), this, SLOT(setResolutionV(int)));
+    this->ui->spinnerV->setValue(Config::resolutionV);
+    this->ui->spinnerV->setRange(2,1000);
     connect(this->ui->spinnerRing, SIGNAL(valueChanged(int)), this, SLOT(setResolutionRing(int)));
+    this->ui->spinnerRing->setValue(Config::resolutionRing);
 }
 
 MainWindow::~MainWindow() {

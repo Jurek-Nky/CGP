@@ -87,7 +87,8 @@ void Planet::draw(glm::mat4 projection_matrix) const {
                        glm::value_ptr(_modelViewMatrix));
 
     // call draw
-    glDrawElements(GL_TRIANGLES, 4800, GL_UNSIGNED_INT, 0);
+    int vertices = Config::resolutionV * Config::resolutionU * 6;
+    glDrawElements(GL_TRIANGLES, vertices, GL_UNSIGNED_INT, 0);
     for (const auto &i: _children) {
         i->draw(projection_matrix);
     }
@@ -103,7 +104,9 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     ///TODO: calculate global rotation
 
     ///TODO: update all drawables that belong to the planet
-
+    if (_oldResolutionV != Config::resolutionV || _oldResolutionU != Config::resolutionU){
+        createObject();
+    }
 
     // calculate new local rotation
     if (Config::localRotationEnable)
@@ -117,10 +120,11 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     modelview_stack.push(modelViewMatrix);
 
     //global rotation
-    if (Config::globalRotationEnable){
+    if (Config::globalRotationEnable) {
         float rotationFactor = 2 * glm::pi<float>() / float(_daysPerYear) * _localRotationSpeed / 60;
-        _globalRotationAngle = std::fmod((_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * rotationFactor),
-                                         (2 * glm::pi<float>()));
+        _globalRotationAngle = std::fmod(
+                (_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * rotationFactor),
+                (2 * glm::pi<float>()));
     }
 
     float x = _center[0] + (_distance * glm::cos(_globalRotationAngle));
@@ -164,15 +168,16 @@ void Planet::createObject() {
     std::vector<glm::vec2> texcoords;
     std::vector<unsigned int> indices;
 
-    geom_sphere(positions, normals, texcoords, indices, 40, 20);
-
+    geom_sphere(positions, normals, texcoords, indices, Config::resolutionU, Config::resolutionV);
+    _oldResolutionU = Config::resolutionU;
+    _oldResolutionV = Config::resolutionV;
     // Set up a vertex array object for the geometry
     if (_vertexArrayObject == 0)
         glGenVertexArrays(1, &_vertexArrayObject);
     glBindVertexArray(_vertexArrayObject);
 
     for (auto &position: positions) {
-        position = glm::vec3(position[0] * _radius, position[1] * _radius, position[2] * _radius);
+        position = position * _radius;
     };
     // fill vertex array object with data
     GLuint position_buffer;
