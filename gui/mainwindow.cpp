@@ -21,14 +21,23 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this->ui->checkBoxShowPaths, SIGNAL(clicked(bool)), this, SLOT(setOrbit(bool)));
 
     connect(this->ui->sliderAnimationSpeed, SIGNAL(valueChanged(int)), this, SLOT(setAnimationSpeed(int)));
+    this->ui->sliderAnimationSpeed->setRange(1,100);
+    this->ui->sliderAnimationSpeed->setTickPosition(QSlider::TicksBothSides);
+    this->ui->sliderAnimationSpeed->setTickInterval(10);
 
     connect(this->ui->checkBoxDeathStarActive, SIGNAL(clicked(bool)),this, SLOT(setDeathStarActive(bool)));
     connect(this->ui->checkBoxDeathStarPreview, SIGNAL(clicked(bool)),this, SLOT(setDeathStarPreview(bool)));
     connect(this->ui->sliderDeathStarLaserLen, SIGNAL(valueChanged(int)),this, SLOT(setDeathStarLaserLen(int)));
+    this->ui->sliderDeathStarLaserLen->setRange(1,20);
+    this->ui->sliderDeathStarLaserLen->setTickPosition(QSlider::TicksBothSides);
+    this->ui->sliderDeathStarLaserLen->setTickInterval(2);
     connect(this->ui->sliderDeathStarLaserRad, SIGNAL(valueChanged(int)),this, SLOT(setDeathStarLaserRad(int)));
+    this->ui->sliderDeathStarLaserRad->setRange(1,20);
+    this->ui->sliderDeathStarLaserRad->setTickPosition(QSlider::TicksBothSides);
+    this->ui->sliderDeathStarLaserRad->setTickInterval(2);
 
     connect(this->ui->checkBoxPathPlanet, SIGNAL(clicked(bool)),this, SLOT(setPathActive(bool)));
-    connect(this->ui->selectPathPlanet, SIGNAL(currentIndexChanged(int)),this, SLOT(setPathPlanet(int)));
+    connect(this->ui->selectPathPlanet, SIGNAL(highlighted(int)),this, SLOT(setPathPlanet(int)));
     this->ui->selectPathPlanet->addItem("earth",0);
     this->ui->selectPathPlanet->addItem("moon",1);
     this->ui->selectPathPlanet->addItem("sun",2);
@@ -77,73 +86,69 @@ void MainWindow::setLocalRotation(bool value) {
 }
 
 void MainWindow::setGlobalRotation(bool value) {
-    return;
+   Config::globalRotationEnable = value;
 }
 
 void MainWindow::setGrid(bool value) {
-
-    return;
+    Config::gridEnable = value;
 }
 
 void MainWindow::setCoorSys(bool value) {
-
-    return;
+    Config::coordSysEnable = value;
 }
 
 void MainWindow::setLighting(bool value) {
-
-    return;
+    Config::lightingEnable = value;
 }
 
 void MainWindow::setOrbit(bool value) {
-
-    return;
+    Config::orbitEnable = value;
 }
 
 void MainWindow::setAnimationSpeed(int value) {
-    Config::animationSpeed = float(value) / 2.0f;
+    Config::animationSpeed = float(value);
     QString title = QString("Animation: ") + QString::number(Config::animationSpeed, 'x', 1) + "x";
     this->ui->animationBox->setTitle(title);
 }
 
 void MainWindow::setDeathStarActive(bool value) {
-    return;
+    Config::deathStarActive = value;
 }
 
 void MainWindow::setDeathStarPreview(bool value) {
-    return;
+    Config::deathStarPreviewEnable = value;
 }
 
 void MainWindow::setDeathStarLaserLen(int value) {
-
-    return;
+    Config::deathStarLaserLen = float(value);
 }
 
 void MainWindow::setDeathStarLaserRad(int value) {
-
-    return;
+    Config::deathStarLaserRad = float(value);
 }
 
 void MainWindow::setPathActive(bool value) {
-
-    return;
+    int planetIndex = this->ui->selectPathPlanet->currentIndex();
+    Config::planetPathEnable[planetIndex] = value;
 }
 
 void MainWindow::setPathPlanet(int value) {
-    return;
+    if (Config::planetPathEnable[value]){
+        this->ui->checkBoxPathPlanet->setCheckState(Qt::Checked);
+        return;
+    }
+    this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
 }
 
 void MainWindow::setResolutionU(int value) {
-    return;
+    Config::resolutionU = float(value);
 }
 
 void MainWindow::setResolutionV(int value) {
-    return;
-
+    Config::resolutionV = float(value);
 }
 
 void MainWindow::setResolutionRing(int value) {
-    return;
-
+    Config::resolutionRing = float(value);
 }
 
