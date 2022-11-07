@@ -106,7 +106,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 
 
     // calculate new local rotation
-    if (Config::localRotation)
+    if (Config::localRotationEnable)
         _localRotation += elapsedTimeMs * _localRotationSpeed * Config::animationSpeed;
     _localRotation = std::fmod(_localRotation, 360.0f);
 
