@@ -45,8 +45,6 @@ private:
     std::shared_ptr<Skybox> _skybox;                /**< Skybox (not part of the hierarchy */
     std::shared_ptr<CoordinateSystem> _coordSystem; /**< Coordinate system (not part of the hierarchy) */
 
-    glm::vec3 _viewPoint = glm::vec3(0.0, 0.0, 5.0);
-    glm::vec3 _viewPointCenter = glm::vec3(0.0, 0.0, 0.0);
     glm::vec2 _mousePos;
     // 0 = disabled,
     // 1 = rotation around the center,
@@ -135,7 +133,7 @@ public:
 public slots:
 
 
-    void leftClickMove(glm::vec2 mouseDelta);
+    void leftClickMove(const glm::vec2& mouseDelta);
 
     void middleClickMove(glm::vec2 mouseDelta);
 };

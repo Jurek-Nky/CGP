@@ -163,22 +163,21 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     _mousePos = glm::vec2(event->pos().x(), event->pos().y());
 }
 
-void GLWidget::leftClickMove(glm::vec2 mouseDelta) {
+void GLWidget::leftClickMove(const glm::vec2& mouseDelta) {
 
     glm::vec3 UP = glm::vec3(0, 1, 0);
 
     // rotating viewpoint around UP vector
-    _viewPoint = glm::mat3(glm::rotate(mouseDelta.x * 0.05f, UP)) * _viewPoint;
+    Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.x * 0.05f, UP)) * Config::viewPoint;
 
     // rotating viewpoint around normal vector of viewpoint and Up vector
-    glm::vec3 rotationVec = glm::cross(UP, _viewPoint);
-    _viewPoint = glm::mat3(glm::rotate(mouseDelta.y * 0.01f, rotationVec)) * _viewPoint;
+    glm::vec3 rotationVec = glm::cross(UP, Config::viewPoint);
+    Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.y * 0.01f, rotationVec)) * Config::viewPoint;
 }
 
 void GLWidget::middleClickMove(glm::vec2 mouseDelta) {
     glm::vec3 translationVec = glm::vec3(mouseDelta.x * -0.1, mouseDelta.y * 0.1, 0.0);
-//    _viewPoint = _viewPoint + translationVec;
-    _viewPointCenter = _viewPointCenter + translationVec;
+    Config::viewPointCenter = Config::viewPointCenter + translationVec;
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
@@ -187,6 +186,7 @@ void GLWidget::wheelEvent(QWheelEvent *event) {
     // Hint: you can use:
     // event->angleDelta().ry()
 }
+
 
 void GLWidget::animateGL() {
     // make the context current in case there are glFunctions called
@@ -199,12 +199,19 @@ void GLWidget::animateGL() {
 
     // calculate current modelViewMatrix for the default camera
     /// TODO: use your camera logic here
+
+    if (Config::resetCamEvent){
+        Config::viewPoint = glm::vec3(0,0,5);
+        Config::viewPointCenter = glm::vec3(0,0,0);
+        Config::resetCamEvent = false;
+    }
+
     glm::mat4 modelViewMatrix = glm::lookAt(
             glm::vec3(
-                    _viewPoint[0] * Config::camZoom,
-                    _viewPoint[1] * Config::camZoom,
-                    _viewPoint[2] * Config::camZoom),
-            glm::vec3(_viewPointCenter[0], _viewPointCenter[1], _viewPointCenter[2]),
+                    Config::viewPoint[0] * Config::camZoom,
+                    Config::viewPoint[1] * Config::camZoom,
+                    Config::viewPoint[2] * Config::camZoom),
+            glm::vec3(Config::viewPointCenter[0], Config::viewPointCenter[1], Config::viewPointCenter[2]),
             glm::vec3(0.0, 1.0, 0.0));
 
     // update drawables

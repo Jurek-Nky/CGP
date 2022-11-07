@@ -52,8 +52,15 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->selectPathPlanet->addItem("callisto",11);
 
     connect(this->ui->spinnerU, SIGNAL(valueChanged(int)),this, SLOT(setResolutionU(int)));
+    this->ui->spinnerU->setValue(Config::resolutionU);
+    this->ui->spinnerU->setRange(4,1000);
     connect(this->ui->spinnerV, SIGNAL(valueChanged(int)), this, SLOT(setResolutionV(int)));
+    this->ui->spinnerV->setValue(Config::resolutionV);
+    this->ui->spinnerV->setRange(2,1000);
     connect(this->ui->spinnerRing, SIGNAL(valueChanged(int)), this, SLOT(setResolutionRing(int)));
+    this->ui->spinnerRing->setValue(Config::resolutionRing);
+
+    connect(this->ui->buttonCamReset, SIGNAL(clicked(bool)),this, SLOT(resetCam()));
 }
 
 MainWindow::~MainWindow() {
@@ -141,14 +148,19 @@ void MainWindow::setPathPlanet(int value) {
 }
 
 void MainWindow::setResolutionU(int value) {
-    Config::resolutionU = float(value);
+    Config::resolutionU = value;
 }
 
 void MainWindow::setResolutionV(int value) {
-    Config::resolutionV = float(value);
+    Config::resolutionV = value;
 }
 
 void MainWindow::setResolutionRing(int value) {
-    Config::resolutionRing = float(value);
+    Config::resolutionRing = value;
+}
+
+void MainWindow::resetCam(){
+    Config::viewPoint = glm::vec3(0,0,5);
+    Config::viewPointCenter = glm::vec3 (0,0,0);
 }
 

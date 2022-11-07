@@ -62,6 +62,8 @@ private slots:
     void setResolutionV(int value);
     void setResolutionRing(int value);
 
+    void resetCam();
+
 protected:
     virtual void keyPressEvent(QKeyEvent* event);
 

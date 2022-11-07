@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "glm/vec3.hpp"
+
 /**
  * @brief The global configuration
  *
@@ -29,9 +31,14 @@ public:
 
     static bool planetPathEnable[12];
 
-    static float resolutionU;
-    static float resolutionV;
-    static float resolutionRing;
+    static int resolutionU;
+    static int resolutionV;
+    static int resolutionRing;
+
+    // saving viewpoint for the camera in config, so that it
+    // can be accessed by main window
+    static glm::vec3 viewPoint;
+    static glm::vec3 viewPointCenter;
 };
 
 #endif // CONFIG_H
