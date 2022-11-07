@@ -1,4 +1,5 @@
 #include "config.h"
+#include "glm/vec3.hpp"
 
 /*
  *  Default values. Change them as needed.
@@ -38,3 +39,6 @@ bool Config::planetPathEnable[] = {false,       // earth
 int Config::resolutionU = 40;
 int Config::resolutionV = 20;
 int Config::resolutionRing = 10;
+
+glm::vec3 Config::viewPoint = glm::vec3(0,0,5);
+glm::vec3 Config::viewPointCenter = glm::vec3(0,0,0);
