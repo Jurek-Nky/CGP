@@ -131,7 +131,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
     modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
 
-    //update ceter for all children
+    //update center for all children
     for (auto &i: _children) {
         i->_center = glm::vec3(x, 0, y);
     }
