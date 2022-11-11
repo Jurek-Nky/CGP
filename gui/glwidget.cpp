@@ -103,6 +103,7 @@ void GLWidget::initializeGL() {
 
     /// TODO: Init all drawables here
     _earth->init();
+    _coordSystem->init();
 }
 
 void GLWidget::resizeGL(int width, int height) {
@@ -129,6 +130,9 @@ void GLWidget::paintGL() {
 
     /// TODO: call draw for all drawables
     _earth->draw(projection_matrix);
+    if (Config::coordSysEnable){
+        _coordSystem->draw(projection_matrix);
+    }
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
@@ -163,7 +167,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     _mousePos = glm::vec2(event->pos().x(), event->pos().y());
 }
 
-void GLWidget::leftClickMove(const glm::vec2& mouseDelta) {
+void GLWidget::leftClickMove(const glm::vec2 &mouseDelta) {
 
     glm::vec3 UP = glm::vec3(0, 1, 0);
 
@@ -211,6 +215,7 @@ void GLWidget::animateGL() {
     // update drawables
     /// TODO update all drawables
     _earth->update(timeElapsedMs, modelViewMatrix);
+    _coordSystem->update(timeElapsedMs, modelViewMatrix);
 
     // update the widget (do not remove this!)
     update();

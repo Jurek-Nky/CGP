@@ -36,7 +36,7 @@ qt5_wrap_ui(ui_mainwindow.h gui/mainwindow.ui)
 # List your qrc files here #
 # (if you need any)        #
 ############################
-qt5_add_resources (ResourceSources shader.qrc)
+qt5_add_resources(ResourceSources shader.qrc)
 
 # Optional libraries
 find_package(GTA QUIET)
@@ -49,27 +49,29 @@ add_subdirectory(glbase)
 # List your project files here #
 ################################
 add_executable(tychobrahe
-    main.cpp
-    ${ResourceSources}
-    image/image.cpp
-    gui/mainwindow.ui
-    gui/mainwindow.cpp
-    gui/glwidget.cpp
-    gui/glwidget.hpp
-    gui/config.cpp
-    planets/cone.cpp
-    planets/coordinatesystem.cpp
-    planets/deathstar.cpp
-    planets/drawable.cpp
-    planets/orbit.cpp
-    planets/path.cpp
-    planets/planet.cpp
-    planets/skybox.cpp
-    planets/sun.cpp
+        main.cpp
+        ${ResourceSources}
+        image/image.cpp
+        gui/mainwindow.ui
+        gui/mainwindow.cpp
+        gui/glwidget.cpp
+        gui/glwidget.hpp
+        gui/config.cpp
+        planets/cone.cpp
+        planets/coordinatesystem.cpp
+        planets/deathstar.cpp
+        planets/drawable.cpp
+        planets/orbit.cpp
+        planets/path.cpp
+        planets/planet.cpp
+        planets/skybox.cpp
+        planets/sun.cpp
 
-    shader/cube.vs.glsl
-    shader/cube.fs.glsl
-)
+        shader/cube.vs.glsl
+        shader/cube.fs.glsl
+        shader/coordSys.vs.glsl
+        shader/coordSys.fs.glsl
+        )
 
 include_directories(${CMAKE_SOURCE_DIR}/glbase ${OPENGL_INCLUDE_DIR})
 
@@ -77,21 +79,21 @@ include_directories(${CMAKE_SOURCE_DIR}/glbase ${OPENGL_INCLUDE_DIR})
 # Build with correct opengl lib    #
 # (this could fail on your system) #
 ####################################
-if(WIN32 OR CYGWIN)
-        target_link_libraries(tychobrahe opengl32 libglbase Qt5::OpenGL ${OPENGL_gl_LIBRARY})
-else()
-        target_link_libraries(tychobrahe GL libglbase Qt5::OpenGL ${OPENGL_gl_LIBRARY})
-endif()
+if (WIN32 OR CYGWIN)
+    target_link_libraries(tychobrahe opengl32 libglbase Qt5::OpenGL ${OPENGL_gl_LIBRARY})
+else ()
+    target_link_libraries(tychobrahe GL libglbase Qt5::OpenGL ${OPENGL_gl_LIBRARY})
+endif ()
 
-if(GTA_FOUND)
-        add_definitions(-DHAVE_GTA)
-        include_directories(${GTA_INCLUDE_DIR})
-        target_link_libraries(tychobrahe ${GTA_LIBRARIES})
-endif()
+if (GTA_FOUND)
+    add_definitions(-DHAVE_GTA)
+    include_directories(${GTA_INCLUDE_DIR})
+    target_link_libraries(tychobrahe ${GTA_LIBRARIES})
+endif ()
 
 # copy images
 add_custom_command(TARGET tychobrahe POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_SOURCE_DIR}/images $<TARGET_FILE_DIR:tychobrahe>/images)
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/images $<TARGET_FILE_DIR:tychobrahe>/images)
 
 install(TARGETS tychobrahe RUNTIME DESTINATION bin)
