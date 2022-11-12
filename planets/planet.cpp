@@ -41,12 +41,13 @@ Planet::Planet(std::string name,
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
     _path = std::make_shared<Path>(name + " Pfad");
-
     /// TODO: init global rotation parameters
 }
 
 void Planet::init() {
     Drawable::init();
+    _path->init();
+    //calculatePath(_modelViewMatrix);
 
     /// TODO: load texture
 
@@ -60,6 +61,10 @@ void Planet::recreate() {
     Drawable::recreate();
     /// TODO: recreate all drawables that belong to this planet
     // Hint: not all drawables need to be recreated
+    for (auto &i: _children) {
+        i->recreate();
+    }
+    _path->recreate();
 }
 
 
@@ -85,11 +90,28 @@ void Planet::draw(glm::mat4 projection_matrix) const {
                        glm::value_ptr(projection_matrix));
     glUniformMatrix4fv(glGetUniformLocation(_program, "modelview_matrix"), 1, GL_FALSE,
                        glm::value_ptr(_modelViewMatrix));
-
+    //
+    GLuint colorWhite = 0;
+    glUniform1i(glGetUniformLocation(_program, "colorEnable"), colorWhite);
     // call draw
     glDrawElements(GL_TRIANGLES, Config::resolutionV * Config::resolutionU * 6, GL_UNSIGNED_INT, 0);
+
+
+    // changing shader to change color of grid
+    if (Config::gridEnable) {
+        glDisable(GL_DEPTH_TEST);
+        colorWhite = 1;
+        glUniform1i(glGetUniformLocation(_program, "colorEnable"), colorWhite);
+
+        glDrawElements(GL_LINES, Config::resolutionU * Config::resolutionV * 6, GL_UNSIGNED_INT, 0);
+        glEnable(GL_DEPTH_TEST);
+    }
+
     for (const auto &i: _children) {
         i->draw(projection_matrix);
+    }
+    if (Config::currentPathPlanet == _name) {
+        _path->draw(projection_matrix);
     }
 
     // unbin vertex array object
@@ -103,7 +125,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     ///TODO: calculate global rotation
 
     ///TODO: update all drawables that belong to the planet
-    if (_oldResolutionV != Config::resolutionV || _oldResolutionU != Config::resolutionU){
+    if (_oldResolutionV != Config::resolutionV || _oldResolutionU != Config::resolutionU) {
         createObject();
     }
 
@@ -130,7 +152,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
     modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
 
-    //update center for all children
+    // update center for all children
     for (auto &i: _children) {
         i->_center = glm::vec3(x, 0, y);
     }
@@ -145,6 +167,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     for (const auto &i: _children) {
         i->update(elapsedTimeMs, modelViewMatrix);
     }
+    _path->update(elapsedTimeMs, modelViewMatrix);
 }
 
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
@@ -186,6 +209,14 @@ void Planet::createObject() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
+    GLuint normals_buffer;
+    glGenBuffers(1, &normals_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, normals_buffer);
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * 3 * sizeof(float), normals.data(), GL_STATIC_DRAW);
+    GLintptr normalsOffset = 3 * sizeof(float);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *) normalsOffset);
+    glEnableVertexAttribArray(0);
+
     // Hint: the texture coordinates buffer is missing
 
     GLuint index_buffer;
@@ -198,6 +229,7 @@ void Planet::createObject() {
     // delete buffers (the data is stored in the vertex array object)
     glDeleteBuffers(1, &position_buffer);
     glDeleteBuffers(1, &index_buffer);
+    glDeleteBuffers(1, &normals_buffer);
 
     // check for errors
     VERIFY(CG::checkError());
@@ -207,7 +239,6 @@ void Planet::createObject() {
 
 std::string Planet::getVertexShader() const {
     return Drawable::loadShaderFile(":/shader/cube.vs.glsl");
-
 }
 
 std::string Planet::getFragmentShader() const {

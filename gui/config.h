@@ -31,6 +31,8 @@ public:
 
     static bool planetPathEnable[12];
 
+    static std::string currentPathPlanet;
+
     static int resolutionU;
     static int resolutionV;
     static int resolutionRing;

@@ -1,6 +1,7 @@
 #ifndef PATH_H
 #define PATH_H
 
+#include <vector>
 #include "planets/orbit.h"
 
 /**
@@ -35,6 +36,9 @@ public:
      * @param position The position to add
      */
     virtual void addPosition(glm::vec3 position);
+
+    std::vector<glm::vec3> _positions;
+    std::vector<unsigned int> _indices;
 
 protected:
 

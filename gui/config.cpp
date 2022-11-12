@@ -1,3 +1,4 @@
+#include <string>
 #include "config.h"
 #include "glm/vec3.hpp"
 
@@ -9,7 +10,7 @@ float Config::animationSpeed = 1.0f;
 
 float Config::camZoom = 5.0f;
 
-bool Config::localRotationEnable = true;
+bool Config::localRotationEnable = false;
 bool Config::globalRotationEnable = true;
 bool Config::gridEnable = true;
 bool Config::coordSysEnable = true;
@@ -34,6 +35,8 @@ bool Config::planetPathEnable[] = {false,       // earth
                                    false,       // ganymede
                                    false        // callisto
 };
+
+std::string Config::currentPathPlanet = "";
 
 
 int Config::resolutionU = 40;
