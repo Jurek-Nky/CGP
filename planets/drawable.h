@@ -10,7 +10,11 @@
     #include <windows.h>
 #endif
 
+#ifdef APPLE
+#include <OpenGL/OpenGL.h>
+#else
 #include <GL/gl.h>
+#endif
 
 // forward declaration
 class Cone;
