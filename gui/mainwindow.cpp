@@ -14,11 +14,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // connect ui elements to slots
     connect(this->ui->checkBoxLocalRotation, SIGNAL(clicked(bool)), this, SLOT(setLocalRotation(bool)));
+    this->ui->checkBoxLocalRotation->setChecked(Config::localRotationEnable);
     connect(this->ui->checkBoxGlobalRotation, SIGNAL(clicked(bool)), this, SLOT(setGlobalRotation(bool)));
+    this->ui->checkBoxGlobalRotation->setChecked(Config::globalRotationEnable);
     connect(this->ui->checkBoxCoorSystem, SIGNAL(clicked(bool)), this, SLOT(setCoorSys(bool)));
+    this->ui->checkBoxCoorSystem->setChecked(Config::coordSysEnable);
     connect(this->ui->checkBoxGrid, SIGNAL(clicked(bool)), this, SLOT(setGrid(bool)));
+    this->ui->checkBoxGrid->setChecked(Config::gridEnable);
     connect(this->ui->checkBoxLighting, SIGNAL(clicked(bool)), this, SLOT(setLighting(bool)));
+    this->ui->checkBoxLighting->setChecked(Config::lightingEnable);
     connect(this->ui->checkBoxShowPaths, SIGNAL(clicked(bool)), this, SLOT(setOrbit(bool)));
+    this->ui->checkBoxShowPaths->setChecked(Config::orbitEnable);
 
     connect(this->ui->sliderAnimationSpeed, SIGNAL(valueChanged(int)), this, SLOT(setAnimationSpeed(int)));
     this->ui->sliderAnimationSpeed->setRange(1,100);

@@ -87,8 +87,7 @@ void Planet::draw(glm::mat4 projection_matrix) const {
                        glm::value_ptr(_modelViewMatrix));
 
     // call draw
-    int vertices = Config::resolutionV * Config::resolutionU * 6;
-    glDrawElements(GL_TRIANGLES, vertices, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, Config::resolutionV * Config::resolutionU * 6, GL_UNSIGNED_INT, 0);
     for (const auto &i: _children) {
         i->draw(projection_matrix);
     }
