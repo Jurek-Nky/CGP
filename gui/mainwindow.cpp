@@ -44,18 +44,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this->ui->checkBoxPathPlanet, SIGNAL(clicked(bool)),this, SLOT(setPathActive(bool)));
     connect(this->ui->selectPathPlanet, SIGNAL(highlighted(int)),this, SLOT(setPathPlanet(int)));
-    this->ui->selectPathPlanet->addItem("earth",0);
-    this->ui->selectPathPlanet->addItem("moon",1);
-    this->ui->selectPathPlanet->addItem("sun",2);
-    this->ui->selectPathPlanet->addItem("mercury",3);
-    this->ui->selectPathPlanet->addItem("venus",4);
-    this->ui->selectPathPlanet->addItem("mars",5);
-    this->ui->selectPathPlanet->addItem("jupiter",6);
-    this->ui->selectPathPlanet->addItem("saturn",7);
-    this->ui->selectPathPlanet->addItem("io",8);
-    this->ui->selectPathPlanet->addItem("europa",9);
-    this->ui->selectPathPlanet->addItem("ganymede",10);
-    this->ui->selectPathPlanet->addItem("callisto",11);
+    this->ui->selectPathPlanet->addItem("Erde",0);
+    this->ui->selectPathPlanet->addItem("Mond",1);
+    this->ui->selectPathPlanet->addItem("Sonne",2);
+    this->ui->selectPathPlanet->addItem("Merkur",3);
+    this->ui->selectPathPlanet->addItem("Venus",4);
+    this->ui->selectPathPlanet->addItem("Mars",5);
+    this->ui->selectPathPlanet->addItem("Jupiter",6);
+    this->ui->selectPathPlanet->addItem("Saturn",7);
+    this->ui->selectPathPlanet->addItem("Io",8);
+    this->ui->selectPathPlanet->addItem("Europa",9);
+    this->ui->selectPathPlanet->addItem("Ganymede",10);
+    this->ui->selectPathPlanet->addItem("Callisto",11);
 
     connect(this->ui->spinnerU, SIGNAL(valueChanged(int)),this, SLOT(setResolutionU(int)));
     this->ui->spinnerU->setValue(Config::resolutionU);
@@ -141,16 +141,23 @@ void MainWindow::setDeathStarLaserRad(int value) {
 }
 
 void MainWindow::setPathActive(bool value) {
-    int planetIndex = this->ui->selectPathPlanet->currentIndex();
-    Config::planetPathEnable[planetIndex] = value;
+//    int planetIndex = this->ui->selectPathPlanet->currentIndex();
+//    Config::planetPathEnable[planetIndex] = value;
+    if (value) {
+        Config::currentPathPlanet = this->ui->selectPathPlanet->currentText().toStdString();
+        return;
+    }
+   Config::currentPathPlanet = "";
 }
 
 void MainWindow::setPathPlanet(int value) {
-    if (Config::planetPathEnable[value]){
-        this->ui->checkBoxPathPlanet->setCheckState(Qt::Checked);
-        return;
-    }
-    this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
+//    if (Config::planetPathEnable[value]){
+//        this->ui->checkBoxPathPlanet->setCheckState(Qt::Checked);
+//        return;
+//    }
+//    this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
+
+this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
 }
 
 void MainWindow::setResolutionU(int value) {

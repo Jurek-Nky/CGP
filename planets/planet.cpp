@@ -47,6 +47,8 @@ Planet::Planet(std::string name,
 
 void Planet::init() {
     Drawable::init();
+    _path->init();
+    calculatePath(_modelViewMatrix);
 
     /// TODO: load texture
 
@@ -60,6 +62,10 @@ void Planet::recreate() {
     Drawable::recreate();
     /// TODO: recreate all drawables that belong to this planet
     // Hint: not all drawables need to be recreated
+    for (auto & i : _children) {
+        i->recreate();
+    }
+    _path->recreate();
 }
 
 
@@ -87,9 +93,17 @@ void Planet::draw(glm::mat4 projection_matrix) const {
                        glm::value_ptr(_modelViewMatrix));
 
     // call draw
-    glDrawElements(GL_TRIANGLES, Config::resolutionV * Config::resolutionU * 6, GL_UNSIGNED_INT, 0);
+    //glDrawElements(GL_TRIANGLES, Config::resolutionV * Config::resolutionU * 6, GL_UNSIGNED_INT, 0);
+
+    if (Config::gridEnable){
+        glDrawElements(GL_LINES,Config::resolutionU * Config::resolutionV * 6, GL_UNSIGNED_INT,0);
+    }
+
     for (const auto &i: _children) {
         i->draw(projection_matrix);
+    }
+    if (Config::currentPathPlanet == _name){
+        _path->draw(projection_matrix);
     }
 
     // unbin vertex array object
@@ -130,7 +144,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
     modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
 
-    //update ceter for all children
+    // update center for all children
     for (auto &i: _children) {
         i->_center = glm::vec3(x, 0, y);
     }
@@ -145,6 +159,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     for (const auto &i: _children) {
         i->update(elapsedTimeMs, modelViewMatrix);
     }
+    _path->update(elapsedTimeMs,modelViewMatrix);
 }
 
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
@@ -207,7 +222,6 @@ void Planet::createObject() {
 
 std::string Planet::getVertexShader() const {
     return Drawable::loadShaderFile(":/shader/cube.vs.glsl");
-
 }
 
 std::string Planet::getFragmentShader() const {
