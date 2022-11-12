@@ -4,5 +4,7 @@
         <file>shader/cube.vs.glsl</file>
         <file>shader/coordSys.fs.glsl</file>
         <file>shader/coordSys.vs.glsl</file>
+        <file>shader/path.fs.glsl</file>
+        <file>shader/path.vs.glsl</file>
     </qresource>
 </RCC>
