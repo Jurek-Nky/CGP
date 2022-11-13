@@ -158,14 +158,18 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
                 (2 * glm::pi<float>()));
     }
 
-    float x = _center[0] + (_distance * glm::cos(_globalRotationAngle));
-    float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
-    modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
+//    float x = _center[0] + (_distance * glm::cos(_globalRotationAngle));
+//    float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
+//    modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
+//
+//    // update center for all children
+//    for (auto &i: _children) {
+//        i->_center = glm::vec3(x, 0, y);
+//    }
 
-    // update center for all children
-    for (auto &i: _children) {
-        i->_center = glm::vec3(x, 0, y);
-    }
+    // rotate around center
+    modelview_stack.top() = glm::rotate(modelViewMatrix, _globalRotationAngle, glm::vec3(_distance,0,_distance));
+
 
     // rotate around y-axis
     modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
@@ -175,9 +179,9 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 
 
     for (const auto &i: _children) {
-        i->update(elapsedTimeMs, modelViewMatrix);
+        i->update(elapsedTimeMs, _modelViewMatrix);
     }
-    _path->update(elapsedTimeMs, modelViewMatrix);
+    _path->update(elapsedTimeMs, _modelViewMatrix);
     _orbit->update(elapsedTimeMs, _modelViewMatrix);
 }
 
