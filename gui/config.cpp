@@ -12,8 +12,8 @@ float Config::camZoom = 5.0f;
 
 bool Config::localRotationEnable = false;
 bool Config::globalRotationEnable = true;
-bool Config::gridEnable = true;
-bool Config::coordSysEnable = true;
+bool Config::gridEnable = false;
+bool Config::coordSysEnable = false;
 bool Config::lightingEnable = true;
 bool Config::orbitEnable = true;
 
@@ -41,7 +41,7 @@ std::string Config::currentPathPlanet = "";
 
 int Config::resolutionU = 40;
 int Config::resolutionV = 20;
-int Config::resolutionRing = 10;
+int Config::resolutionRing = 50;
 
 glm::vec3 Config::viewPoint = glm::vec3(0,0,5);
 glm::vec3 Config::viewPointCenter = glm::vec3(0,0,0);

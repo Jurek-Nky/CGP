@@ -39,7 +39,7 @@ Planet::Planet(std::string name,
         _globalRotationAngle(0) {
     _localRotationSpeed = 1.0f / hoursPerDay; // for local rotation:one step equals one hour
 
-    _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
+    _orbit = std::make_shared<Orbit>(name + " Orbit", _radius);
     _path = std::make_shared<Path>(name + " Pfad");
     /// TODO: init global rotation parameters
 }
@@ -47,6 +47,9 @@ Planet::Planet(std::string name,
 void Planet::init() {
     Drawable::init();
     _path->init();
+    if (_name == "Saturn") {
+        _orbit->init();
+    }
     //calculatePath(_modelViewMatrix);
 
     /// TODO: load texture
@@ -65,6 +68,9 @@ void Planet::recreate() {
         i->recreate();
     }
     _path->recreate();
+    if (_name == "Saturn") {
+        _orbit->recreate();
+    }
 }
 
 
@@ -112,6 +118,10 @@ void Planet::draw(glm::mat4 projection_matrix) const {
     }
     if (Config::currentPathPlanet == _name) {
         _path->draw(projection_matrix);
+    }
+
+    if (_name == "Saturn") {
+        _orbit->draw(projection_matrix);
     }
 
     // unbin vertex array object
@@ -168,6 +178,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
         i->update(elapsedTimeMs, modelViewMatrix);
     }
     _path->update(elapsedTimeMs, modelViewMatrix);
+    _orbit->update(elapsedTimeMs, _modelViewMatrix);
 }
 
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
@@ -193,14 +204,16 @@ void Planet::createObject() {
     geom_sphere(positions, normals, texcoords, indices, Config::resolutionU, Config::resolutionV);
     _oldResolutionU = Config::resolutionU;
     _oldResolutionV = Config::resolutionV;
+
+    for (auto &position: positions) {
+        position = position * _radius;
+    };
+
     // Set up a vertex array object for the geometry
     if (_vertexArrayObject == 0)
         glGenVertexArrays(1, &_vertexArrayObject);
     glBindVertexArray(_vertexArrayObject);
 
-    for (auto &position: positions) {
-        position = position * _radius;
-    };
     // fill vertex array object with data
     GLuint position_buffer;
     glGenBuffers(1, &position_buffer);

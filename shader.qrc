@@ -6,5 +6,7 @@
         <file>shader/coordSys.vs.glsl</file>
         <file>shader/path.fs.glsl</file>
         <file>shader/path.vs.glsl</file>
+        <file>shader/orbit.fs.glsl</file>
+        <file>shader/orbit.vs.glsl</file>
     </qresource>
 </RCC>
