@@ -87,6 +87,9 @@ protected:
     float _localRotation;       /**< the current local roation */
     float _localRotationSpeed;  /**< the speed at which the planet spins */
 
+    float _globalRotation;
+    float _globalRotationSpeed;
+
     int _oldResolutionU;
     int _oldResolutionV;
 
@@ -157,9 +160,6 @@ protected:
      * Hint: This should only be called once
      */
     virtual void createPath();
-
-    float _globalRotationAngle;
-    glm::vec3 _center;
 };
 
 #endif // PLANET_H

@@ -23,21 +23,23 @@
 #include "planets/path.h"
 #include "glbase/geometries.hpp"
 
-Planet::Planet(std::string name,
-               float radius,
-               float distance,
-               float hoursPerDay,
-               unsigned int daysPerYear,
-               std::string textureLocation) :
+Planet::Planet(
+        std::string name,
+        float radius,
+        float distance,
+        float hoursPerDay,
+        unsigned int daysPerYear,
+        std::string textureLocation) :
         Drawable(name),
         _radius(radius),
         _distance(distance),
         _localRotation(0),
         _localRotationSpeed(0),
-        _daysPerYear(daysPerYear),
-        _center(glm::vec3(0, 0, 0)),
-        _globalRotationAngle(0) {
-    _localRotationSpeed = 1.0f / hoursPerDay; // for local rotation:one step equals one hour
+        _globalRotation(0),
+        _globalRotationSpeed(0),
+        _daysPerYear(daysPerYear) {
+    _localRotationSpeed = 1.0f / hoursPerDay;
+    _globalRotationSpeed = 1.0f / daysPerYear / hoursPerDay;
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _radius);
     _path = std::make_shared<Path>(name + " Pfad");
@@ -132,57 +134,46 @@ void Planet::draw(glm::mat4 projection_matrix) const {
 }
 
 void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
-    ///TODO: calculate global rotation
-
-    ///TODO: update all drawables that belong to the planet
+    // check if resolution changed and recreate object
     if (_oldResolutionV != Config::resolutionV || _oldResolutionU != Config::resolutionU) {
         createObject();
     }
 
     // calculate new local rotation
-    if (Config::localRotationEnable)
+    if (Config::localRotationEnable) {
         _localRotation += elapsedTimeMs * _localRotationSpeed * Config::animationSpeed;
+    }
     _localRotation = std::fmod(_localRotation, 360.0f);
 
-    // apply local rotation to model view matrix
-    // Hint: The stack is currently useless, but could be useful for you
-    std::stack<glm::mat4> modelview_stack;
+    // calculate new global rotation
+    if (Config::globalRotationEnable) {
+        _globalRotation += elapsedTimeMs * _globalRotationSpeed * Config::animationSpeed;
+    }
+    _globalRotation = std::fmod(_globalRotation, 360.f);
 
+    std::stack<glm::mat4> modelview_stack;
     modelview_stack.push(modelViewMatrix);
 
-    //global rotation
-    if (Config::globalRotationEnable) {
-        float rotationFactor = 2 * glm::pi<float>() / float(_daysPerYear) * _localRotationSpeed / 60;
-        _globalRotationAngle = std::fmod(
-                (_globalRotationAngle + elapsedTimeMs * Config::animationSpeed * rotationFactor),
-                (2 * glm::pi<float>()));
-    }
-
-//    float x = _center[0] + (_distance * glm::cos(_globalRotationAngle));
-//    float y = _center[2] + (_distance * glm::sin(_globalRotationAngle));
-//    modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(x, 0, y));
-//
-//    // update center for all children
-//    for (auto &i: _children) {
-//        i->_center = glm::vec3(x, 0, y);
-//    }
-
     // rotate around center
-    modelview_stack.top() = glm::rotate(modelViewMatrix, _globalRotationAngle, glm::vec3(_distance,0,_distance));
+    modelview_stack.top() = (glm::rotate(modelview_stack.top(), glm::radians(_globalRotation), glm::vec3(0, 1, 0)));
+    modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(_distance, 0, _distance));
 
+
+    // applying rotation to all drawables that belong to the planet
+    // notice this step happens before the local rotation is applied
+    for (const auto &i: _children) {
+        i->update(elapsedTimeMs, modelview_stack.top());
+    }
+    _orbit->update(elapsedTimeMs, modelview_stack.top());
+    _path->update(elapsedTimeMs, modelViewMatrix);
 
     // rotate around y-axis
     modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
+
+    // saving new _modelViewMatix
     _modelViewMatrix = glm::mat4(modelview_stack.top());
 
     modelview_stack.pop();
-
-
-    for (const auto &i: _children) {
-        i->update(elapsedTimeMs, _modelViewMatrix);
-    }
-    _path->update(elapsedTimeMs, _modelViewMatrix);
-    _orbit->update(elapsedTimeMs, _modelViewMatrix);
 }
 
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
