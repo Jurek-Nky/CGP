@@ -53,9 +53,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->selectPathPlanet->addItem("Jupiter",6);
     this->ui->selectPathPlanet->addItem("Saturn",7);
     this->ui->selectPathPlanet->addItem("Io",8);
-    this->ui->selectPathPlanet->addItem("Europa",9);
-    this->ui->selectPathPlanet->addItem("Ganymede",10);
-    this->ui->selectPathPlanet->addItem("Callisto",11);
+    this->ui->selectPathPlanet->addItem("Europa", 9);
+    this->ui->selectPathPlanet->addItem("Ganymed", 10);
+    this->ui->selectPathPlanet->addItem("Callisto", 11);
 
     connect(this->ui->spinnerU, SIGNAL(valueChanged(int)),this, SLOT(setResolutionU(int)));
     this->ui->spinnerU->setValue(Config::resolutionU);
