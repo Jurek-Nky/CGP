@@ -65,8 +65,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->spinnerV->setRange(2,1000);
     connect(this->ui->spinnerRing, SIGNAL(valueChanged(int)), this, SLOT(setResolutionRing(int)));
     this->ui->spinnerRing->setValue(Config::resolutionRing);
-
-    connect(this->ui->buttonCamReset, SIGNAL(clicked(bool)),this, SLOT(resetCam()));
+    this->ui->spinnerRing->setRange(4, 1000);
+    connect(this->ui->buttonCamReset, SIGNAL(clicked(bool)), this, SLOT(resetCam()));
 }
 
 MainWindow::~MainWindow() {

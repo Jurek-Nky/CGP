@@ -44,6 +44,8 @@ protected:
     virtual void createObject() override;
 
     float _radius;       /**< The radius of the orbit */
+
+    int _oldResolutionRing;
 };
 
 #endif // ORBIT_H
