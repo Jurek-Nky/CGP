@@ -10,7 +10,7 @@ float Config::animationSpeed = 1.0f;
 
 float Config::camZoom = 5.0f;
 
-bool Config::localRotationEnable = false;
+bool Config::localRotationEnable = true;
 bool Config::globalRotationEnable = true;
 bool Config::gridEnable = false;
 bool Config::coordSysEnable = false;

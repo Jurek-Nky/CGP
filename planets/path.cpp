@@ -32,7 +32,7 @@ void Path::draw(glm::mat4 projection_matrix) const {
                        glm::value_ptr(_modelViewMatrix));
 
     // call draw
-    glDrawElements(GL_POINTS, _indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINE_STRIP, _indices.size(), GL_UNSIGNED_INT, 0);
 
     // unbin vertex array object
     glBindVertexArray(0);
@@ -71,7 +71,6 @@ void Path::createObject() {
     // check for errors
     VERIFY(CG::checkError());
 
-    // Hint: save the number of vertices for drawing
 }
 
 void Path::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {

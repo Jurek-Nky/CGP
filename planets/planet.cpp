@@ -39,7 +39,7 @@ Planet::Planet(
         _globalRotationSpeed(0),
         _daysPerYear(daysPerYear) {
     _localRotationSpeed = 1.0f / hoursPerDay;
-    _globalRotationSpeed = 1.0f / daysPerYear / hoursPerDay;
+    _globalRotationSpeed = 1.0f / daysPerYear / hoursPerDay / 3600;
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _radius);
     _path = std::make_shared<Path>(name + " Pfad");
@@ -52,7 +52,10 @@ void Planet::init() {
     if (_name == "Saturn") {
         _orbit->init();
     }
-    //calculatePath(_modelViewMatrix);
+
+    if (_name == "Erde") {
+        calculatePath(_modelViewMatrix);
+    }
 
     /// TODO: load texture
 
@@ -155,9 +158,8 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     modelview_stack.push(modelViewMatrix);
 
     // rotate around center
-    modelview_stack.top() = (glm::rotate(modelview_stack.top(), glm::radians(_globalRotation), glm::vec3(0, 1, 0)));
-    modelview_stack.top() = glm::translate(modelview_stack.top(), glm::vec3(_distance, 0, _distance));
-
+    modelview_stack.push(glm::rotate(modelview_stack.top(), _globalRotation, glm::vec3(0, 1, 0)));
+    modelview_stack.push(glm::translate(modelview_stack.top(), glm::vec3(_distance, 0, _distance)));
 
     // applying rotation to all drawables that belong to the planet
     // notice this step happens before the local rotation is applied
@@ -165,15 +167,25 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
         i->update(elapsedTimeMs, modelview_stack.top());
     }
     _orbit->update(elapsedTimeMs, modelview_stack.top());
-    _path->update(elapsedTimeMs, modelViewMatrix);
 
     // rotate around y-axis
     modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
 
-    // saving new _modelViewMatix
+    // saving new _modelViewMatrix
     _modelViewMatrix = glm::mat4(modelview_stack.top());
 
     modelview_stack.pop();
+    modelview_stack.pop();
+    modelview_stack.pop();
+
+    glm::mat4 mvm = glm::lookAt(
+            glm::vec3(
+                    Config::viewPoint[0] * Config::camZoom,
+                    Config::viewPoint[1] * Config::camZoom,
+                    Config::viewPoint[2] * Config::camZoom),
+            glm::vec3(Config::viewPointCenter[0], Config::viewPointCenter[1], Config::viewPointCenter[2]),
+            glm::vec3(0.0, 1.0, 0.0));
+    _path->update(elapsedTimeMs, mvm);
 }
 
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
