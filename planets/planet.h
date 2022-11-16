@@ -160,6 +160,8 @@ protected:
      * Hint: This should only be called once
      */
     virtual void createPath();
+
+    glm::vec3 _center;
 };
 
 #endif // PLANET_H

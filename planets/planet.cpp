@@ -39,7 +39,7 @@ Planet::Planet(
         _globalRotationSpeed(0),
         _daysPerYear(daysPerYear) {
     _localRotationSpeed = 1.0f / hoursPerDay;
-    _globalRotationSpeed = 1.0f / daysPerYear / hoursPerDay / 3600;
+    _globalRotationSpeed = 1.0f / daysPerYear;
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _radius);
     _path = std::make_shared<Path>(name + " Pfad");
@@ -146,46 +146,32 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     if (Config::localRotationEnable) {
         _localRotation += elapsedTimeMs * _localRotationSpeed * Config::animationSpeed;
     }
-    _localRotation = std::fmod(_localRotation, 360.0f);
 
     // calculate new global rotation
     if (Config::globalRotationEnable) {
         _globalRotation += elapsedTimeMs * _globalRotationSpeed * Config::animationSpeed;
     }
+    // keeping rotations in range of 0-360
+    _localRotation = std::fmod(_localRotation, 360.0f);
     _globalRotation = std::fmod(_globalRotation, 360.f);
 
-    std::stack<glm::mat4> modelview_stack;
-    modelview_stack.push(modelViewMatrix);
+    float x = _center.x + (_distance * glm::cos(glm::radians(_globalRotation)));
+    float y = _center.z + (_distance * glm::sin(glm::radians(_globalRotation)));
+    _modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(x, 0, y));
 
-    // rotate around center
-    modelview_stack.push(glm::rotate(modelview_stack.top(), _globalRotation, glm::vec3(0, 1, 0)));
-    modelview_stack.push(glm::translate(modelview_stack.top(), glm::vec3(_distance, 0, _distance)));
-
-    // applying rotation to all drawables that belong to the planet
-    // notice this step happens before the local rotation is applied
     for (const auto &i: _children) {
-        i->update(elapsedTimeMs, modelview_stack.top());
+        // updating center point for all children
+        i->_center = glm::vec3(x, 0, y);
+        // calling update for all children
+        i->update(elapsedTimeMs, modelViewMatrix);
     }
-    _orbit->update(elapsedTimeMs, modelview_stack.top());
+    _orbit->update(elapsedTimeMs, _modelViewMatrix);
 
     // rotate around y-axis
-    modelview_stack.top() = glm::rotate(modelview_stack.top(), glm::radians(_localRotation), glm::vec3(0, 1, 0));
+    _modelViewMatrix = glm::rotate(_modelViewMatrix, glm::radians(_localRotation), glm::vec3(0, 1, 0));
 
-    // saving new _modelViewMatrix
-    _modelViewMatrix = glm::mat4(modelview_stack.top());
-
-    modelview_stack.pop();
-    modelview_stack.pop();
-    modelview_stack.pop();
-
-    glm::mat4 mvm = glm::lookAt(
-            glm::vec3(
-                    Config::viewPoint[0] * Config::camZoom,
-                    Config::viewPoint[1] * Config::camZoom,
-                    Config::viewPoint[2] * Config::camZoom),
-            glm::vec3(Config::viewPointCenter[0], Config::viewPointCenter[1], Config::viewPointCenter[2]),
-            glm::vec3(0.0, 1.0, 0.0));
-    _path->update(elapsedTimeMs, mvm);
+    // path should be in the center of the coordinate system, so it doesn't need the calculated viewModelMatrix
+    _path->update(elapsedTimeMs, glm::mat4());
 }
 
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
