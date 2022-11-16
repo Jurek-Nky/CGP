@@ -32,8 +32,12 @@ void Path::draw(glm::mat4 projection_matrix) const {
     glUniformMatrix4fv(glGetUniformLocation(_program, "modelview_matrix"), 1, GL_FALSE,
                        glm::value_ptr(_modelViewMatrix));
 
+    // disable depth test so that path is drawn over the coordinate system
+    glDisable(GL_DEPTH_TEST);
     // call draw
     glDrawElements(GL_LINE_STRIP, _indices.size(), GL_UNSIGNED_INT, 0);
+    // enable depth test again
+    glEnable(GL_DEPTH_TEST);
 
     // unbin vertex array object
     glBindVertexArray(0);
