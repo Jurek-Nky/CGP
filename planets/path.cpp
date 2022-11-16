@@ -7,6 +7,7 @@
 #include "glbase/gltool.hpp"
 
 #include "gui/config.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 Path::Path(std::string name) :
         Drawable(name) {
@@ -75,13 +76,19 @@ void Path::createObject() {
 
 void Path::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     /// TODO: your code here
-    _modelViewMatrix = modelViewMatrix;
+    _modelViewMatrix = glm::lookAt(
+            glm::vec3(
+                    Config::viewPoint[0] * Config::camZoom,
+                    Config::viewPoint[1] * Config::camZoom,
+                    Config::viewPoint[2] * Config::camZoom),
+            glm::vec3(0.f, 0.f, 0.f),
+            glm::vec3(0.f, 1.f, 0.f));
 }
 
 void Path::addPosition(glm::vec3 position) {
     /// TODO: your code here
     _positions.push_back(position);
-    _indices.push_back(_positions.size());
+    _indices.push_back(_positions.size() - 1);
 }
 
 std::string Path::getVertexShader() const {
