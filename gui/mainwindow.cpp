@@ -27,9 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->checkBoxShowPaths->setChecked(Config::orbitEnable);
 
     connect(this->ui->sliderAnimationSpeed, SIGNAL(valueChanged(int)), this, SLOT(setAnimationSpeed(int)));
-    this->ui->sliderAnimationSpeed->setRange(1,100);
+    this->ui->sliderAnimationSpeed->setRange(1, 50);
     this->ui->sliderAnimationSpeed->setTickPosition(QSlider::TicksBothSides);
     this->ui->sliderAnimationSpeed->setTickInterval(10);
+    this->ui->sliderAnimationSpeed->setValue(Config::animationSpeed);
 
     connect(this->ui->checkBoxDeathStarActive, SIGNAL(clicked(bool)),this, SLOT(setDeathStarActive(bool)));
     connect(this->ui->checkBoxDeathStarPreview, SIGNAL(clicked(bool)),this, SLOT(setDeathStarPreview(bool)));
@@ -119,7 +120,7 @@ void MainWindow::setOrbit(bool value) {
 }
 
 void MainWindow::setAnimationSpeed(int value) {
-    Config::animationSpeed = float(value);
+    Config::animationSpeed = float(value) / 2.0f;
     QString title = QString("Animation: ") + QString::number(Config::animationSpeed, 'x', 1) + "x";
     this->ui->animationBox->setTitle(title);
 }
