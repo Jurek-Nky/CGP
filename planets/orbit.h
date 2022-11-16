@@ -2,6 +2,7 @@
 #define ORBIT_H
 
 #include "planets/drawable.h"
+#include "glm/vec3.hpp"
 
 /**
  * @brief The Orbit class describes the local orbit of a planet.
@@ -26,6 +27,8 @@ public:
      * @see Drawable::update(float, glm::mat4)
      */
     virtual void update(float elapsedTimeMs, glm::mat4 modelViewMatrix) override;
+
+    glm::vec3 _center;
 
 protected:
     /**

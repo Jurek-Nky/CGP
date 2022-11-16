@@ -41,7 +41,7 @@ Planet::Planet(
     _localRotationSpeed = 1.0f / hoursPerDay;
     _globalRotationSpeed = 1.0f / daysPerYear;
 
-    _orbit = std::make_shared<Orbit>(name + " Orbit", _radius);
+    _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
     _path = std::make_shared<Path>(name + " Pfad");
     /// TODO: init global rotation parameters
 }
@@ -49,7 +49,8 @@ Planet::Planet(
 void Planet::init() {
     Drawable::init();
     _path->init();
-    if (_name == "Saturn") {
+    if (_name != "Erde") {
+
         _orbit->init();
     }
 
@@ -73,7 +74,7 @@ void Planet::recreate() {
         i->recreate();
     }
     _path->recreate();
-    if (_name == "Saturn") {
+    if (_name != "Erde") {
         _orbit->recreate();
     }
 }
@@ -125,7 +126,7 @@ void Planet::draw(glm::mat4 projection_matrix) const {
         _path->draw(projection_matrix);
     }
 
-    if (_name == "Saturn") {
+    if (Config::orbitEnable && _name != "Erde") {
         _orbit->draw(projection_matrix);
     }
 
@@ -165,7 +166,10 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
         // calling update for all children
         i->update(elapsedTimeMs, modelViewMatrix);
     }
-    _orbit->update(elapsedTimeMs, _modelViewMatrix);
+    if (_name != "Erde") {
+        _orbit->_center = _center;
+        _orbit->update(elapsedTimeMs, modelViewMatrix);
+    }
 
     // rotate around y-axis
     _modelViewMatrix = glm::rotate(_modelViewMatrix, glm::radians(_localRotation), glm::vec3(0, 1, 0));
