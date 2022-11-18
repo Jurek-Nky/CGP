@@ -122,7 +122,7 @@ void GLWidget::paintGL() {
     float aspectRatio = Config::windowResolution[0] / Config::windowResolution[1];
     glm::mat4 projection_matrix = glm::perspective(glm::radians(50.0f),
                                                    aspectRatio,
-                                                   0.1f, 100.0f);
+                                                   0.1f, 500.0f);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

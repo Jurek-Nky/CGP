@@ -37,7 +37,7 @@ void Orbit::draw(glm::mat4 projection_matrix) const {
     // disable depth test so that path is drawn over the coordinate system
     glDisable(GL_DEPTH_TEST);
     // call draw
-    glDrawElements(GL_TRIANGLES, Config::resolutionRing * 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 600, GL_UNSIGNED_INT, 0);
     // enable depth test again
     glEnable(GL_DEPTH_TEST);
 
@@ -49,9 +49,6 @@ void Orbit::draw(glm::mat4 projection_matrix) const {
 }
 
 void Orbit::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
-    if (_oldResolutionRing != Config::resolutionRing) {
-        recreate();
-    }
     _modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(_center.x, 0, _center.z));
 }
 
@@ -69,9 +66,8 @@ void Orbit::createObject() {
     std::vector<glm::vec2> texcoords;
     std::vector<unsigned int> indices;
 
-    geom_disk(positions, normals, texcoords, indices, _radius / (_radius + 0.02), Config::resolutionRing);
+    geom_disk(positions, normals, texcoords, indices, _radius / (_radius + 0.02), 100);
 
-    _oldResolutionRing = Config::resolutionRing;
     glm::vec3 axis = glm::vec3(1, 0, 0);
     for (auto &position: positions) {
         position = position * _radius * 1.5f;
