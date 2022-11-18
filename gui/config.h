@@ -41,6 +41,8 @@ public:
     // can be accessed by main window
     static glm::vec3 viewPoint;
     static glm::vec3 viewPointCenter;
+
+    static glm::vec2 windowResolution;
 };
 
 #endif // CONFIG_H

@@ -101,7 +101,6 @@ void GLWidget::initializeGL() {
     // make sure the context is current
     makeCurrent();
 
-    /// TODO: Init all drawables here
     _earth->init();
     _coordSystem->init();
 }
@@ -110,25 +109,23 @@ void GLWidget::resizeGL(int width, int height) {
     // update the viewport
     glViewport(0, 0, width, height);
 
-    /// TODO: store the resolution in the config in case someone needs it
+    // store resolution in config
+    Config::windowResolution[0] = width;
+    Config::windowResolution[1] = height;
 }
 
 void GLWidget::paintGL() {
-    /// TODO: recreate the scene if needed
-
     // Render: set up view
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    /// TODO: calculate projection matrix from resolution
+    float aspectRatio = Config::windowResolution[0] / Config::windowResolution[1];
     glm::mat4 projection_matrix = glm::perspective(glm::radians(50.0f),
-                                                   783.0f / 691,
+                                                   aspectRatio,
                                                    0.1f, 100.0f);
-
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    /// TODO: call draw for all drawables
     _earth->draw(projection_matrix);
     if (Config::coordSysEnable) {
         _coordSystem->draw(projection_matrix);
@@ -136,25 +133,18 @@ void GLWidget::paintGL() {
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
-    // ignore if it was not the left mouse button
     if (event->button() & Qt::LeftButton)
         _moveMode = 1;
     else if (event->button() & Qt::MiddleButton)
         _moveMode = 2;
-    /// TODO: handle left press here
     _mousePos = glm::vec2(event->pos().x(), event->pos().y());
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
-    // ignore if it was not the left mouzse button
-//    if (!(event->button() & Qt::LeftButton))
-//        return;
-    /// TODO: handle left release here
     _moveMode = 0;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-    /// TODO: handle camera movement here
     //calculating mouseDelta
     glm::vec2 mouseDelta = glm::vec2(glm::vec2(event->pos().x(), event->pos().y()) - _mousePos);
 
@@ -180,12 +170,10 @@ void GLWidget::leftClickMove(const glm::vec2 &mouseDelta) {
 }
 
 void GLWidget::middleClickMove(glm::vec2 mouseDelta) {
-    glm::vec3 translationVec = glm::vec3(mouseDelta.x * -0.1, mouseDelta.y * 0.1, 0.0);
-    Config::viewPointCenter = Config::viewPointCenter + translationVec;
+    return;
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
-    /// TODO: handle zoom here
     Config::camZoom += event->angleDelta().ry() * 0.01;
     // Hint: you can use:
     // event->angleDelta().ry()
@@ -202,8 +190,6 @@ void GLWidget::animateGL() {
     _stopWatch.restart();
 
     // calculate current modelViewMatrix for the default camera
-    /// TODO: use your camera logic here
-
     glm::mat4 modelViewMatrix = glm::lookAt(
             glm::vec3(
                     Config::viewPoint[0] * Config::camZoom,
@@ -213,7 +199,6 @@ void GLWidget::animateGL() {
             glm::vec3(0.0, 1.0, 0.0));
 
     // update drawables
-    /// TODO update all drawables
     _earth->update(timeElapsedMs, modelViewMatrix);
     _coordSystem->update(timeElapsedMs, modelViewMatrix);
 
