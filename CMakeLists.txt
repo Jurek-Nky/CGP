@@ -71,7 +71,7 @@ add_executable(tychobrahe
         shader/cube.fs.glsl
         shader/coordSys.vs.glsl
         shader/coordSys.fs.glsl
-        )
+        planets/ring.cpp planets/ring.h)
 
 include_directories(${CMAKE_SOURCE_DIR}/glbase ${OPENGL_INCLUDE_DIR})
 

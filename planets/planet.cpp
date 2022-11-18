@@ -14,6 +14,7 @@
 #include "gui/config.h"
 #include "planets/cone.h"
 #include "planets/sun.h"
+#include "planets/ring.h"
 #include "planets/orbit.h"
 #include "planets/path.h"
 #include "glbase/geometries.hpp"
@@ -27,18 +28,22 @@ Planet::Planet(std::string name, float radius, float distance, float hoursPerDay
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
     _path = std::make_shared<Path>(name + " Pfad");
+    _ring = std::make_shared<Ring>(name + "Ringg", _radius);
 }
 
 void Planet::init() {
     Drawable::init();
     _path->init();
     if (_name != "Erde") {
-
         _orbit->init();
     }
 
     if (_name == "Erde") {
         calculatePath(_modelViewMatrix);
+    }
+
+    if (_name == "Saturn") {
+        _ring->init();
     }
 
     for (auto &i: _children) {
@@ -53,6 +58,9 @@ void Planet::recreate() {
         i->recreate();
     }
     _path->recreate();
+    if (_name == "Saturn") {
+        _ring->recreate();
+    }
     if (_name != "Erde") {
         _orbit->recreate();
     }
@@ -104,6 +112,10 @@ void Planet::draw(glm::mat4 projection_matrix) const {
         _orbit->draw(projection_matrix);
     }
 
+    if (_name == "Saturn") {
+        _ring->draw(projection_matrix);
+    }
+
     // unbin vertex array object
     glBindVertexArray(0);
 
@@ -147,6 +159,10 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 
     // rotate around y-axis
     _modelViewMatrix = glm::rotate(_modelViewMatrix, glm::radians(_localRotation), glm::vec3(0, 1, 0));
+
+    if (_name == "Saturn") {
+        _ring->update(elapsedTimeMs, _modelViewMatrix);
+    }
 
     // path should be in the center of the coordinate system, so it doesn't need the calculated viewModelMatrix
     _path->update(elapsedTimeMs, glm::mat4());

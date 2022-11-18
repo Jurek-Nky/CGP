@@ -8,5 +8,7 @@
         <file>shader/path.vs.glsl</file>
         <file>shader/orbit.fs.glsl</file>
         <file>shader/orbit.vs.glsl</file>
+        <file>shader/ring.fs.glsl</file>
+        <file>shader/ring.vs.glsl</file>
     </qresource>
 </RCC>
