@@ -37,6 +37,7 @@ qt5_wrap_ui(ui_mainwindow.h gui/mainwindow.ui)
 # (if you need any)        #
 ############################
 qt5_add_resources(ResourceSources shader.qrc)
+qt5_add_resources(ResourceSources style.qrc)
 
 # Optional libraries
 find_package(GTA QUIET)
@@ -66,12 +67,8 @@ add_executable(tychobrahe
         planets/planet.cpp
         planets/skybox.cpp
         planets/sun.cpp
-
-        shader/cube.vs.glsl
-        shader/cube.fs.glsl
-        shader/coordSys.vs.glsl
-        shader/coordSys.fs.glsl
-        planets/ring.cpp planets/ring.h)
+        planets/ring.cpp
+        )
 
 include_directories(${CMAKE_SOURCE_DIR}/glbase ${OPENGL_INCLUDE_DIR})
 
