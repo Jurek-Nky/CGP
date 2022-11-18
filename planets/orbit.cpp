@@ -12,9 +12,7 @@
 #include "gui/config.h"
 #include "glbase/geometries.hpp"
 
-Orbit::Orbit(std::string name, float radius) :
-        Drawable(name),
-        _radius(radius) {
+Orbit::Orbit(std::string name, float radius) : Drawable(name), _radius(radius) {
 
 }
 
@@ -117,6 +115,4 @@ void Orbit::createObject() {
 
     // check for errors
     VERIFY(CG::checkError());
-
-    // Hint: save the number of vertices for drawing
 }

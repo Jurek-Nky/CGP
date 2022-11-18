@@ -10,8 +10,7 @@ layout (location = 1) in vec3 normals;
 // send color to fragment shader
 out vec3 vcolor;
 
-void main(void)
-{
+void main(void) {
     gl_Position = projection_matrix * modelview_matrix * vec4(pos, 1);
     vcolor = pos;
 }

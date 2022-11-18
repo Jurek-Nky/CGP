@@ -9,12 +9,10 @@ uniform int colorEnable;
 // send color to screen
 layout (location = 0) out vec4 fcolor;
 
-void main(void)
-{
+void main(void) {
     if (colorEnable == 1) {
-        fcolor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-    else {
+        fcolor = vec4(0.0, 1.0, 0.0, 1.0);
+    } else {
         // set fragment color
         fcolor = vec4(normalize(vcolor), 1);
     }

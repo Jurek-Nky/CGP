@@ -1,49 +1,32 @@
 #include <GL/glew.h>
 #include "planet.h"
 
-
 #define GLM_FORCE_RADIANS
 #define GLM_SWIZZLE
 
 #include <cmath>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <algorithm>
 #include <iostream>
 #include <stack>
-
 #include "glbase/gltool.hpp"
-
 #include "gui/config.h"
-
 #include "planets/cone.h"
 #include "planets/sun.h"
 #include "planets/orbit.h"
 #include "planets/path.h"
 #include "glbase/geometries.hpp"
 
-Planet::Planet(
-        std::string name,
-        float radius,
-        float distance,
-        float hoursPerDay,
-        unsigned int daysPerYear,
-        std::string textureLocation) :
-        Drawable(name),
-        _radius(radius),
-        _distance(distance),
-        _localRotation(0),
-        _localRotationSpeed(0),
-        _globalRotation(0),
-        _globalRotationSpeed(0),
-        _daysPerYear(daysPerYear) {
+Planet::Planet(std::string name, float radius, float distance, float hoursPerDay, unsigned int daysPerYear,
+               std::string textureLocation) : Drawable(name), _radius(radius), _distance(distance), _localRotation(0),
+                                              _localRotationSpeed(0), _globalRotation(0), _globalRotationSpeed(0),
+                                              _daysPerYear(daysPerYear) {
     _localRotationSpeed = 1.0f / hoursPerDay;
     _globalRotationSpeed = 1.0f / daysPerYear;
 
     _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
     _path = std::make_shared<Path>(name + " Pfad");
-    /// TODO: init global rotation parameters
 }
 
 void Planet::init() {
@@ -58,9 +41,6 @@ void Planet::init() {
         calculatePath(_modelViewMatrix);
     }
 
-    /// TODO: load texture
-
-    /// TODO: init children, orbit and path
     for (auto &i: _children) {
         i->init();
     }
@@ -68,7 +48,6 @@ void Planet::init() {
 
 void Planet::recreate() {
     Drawable::recreate();
-    /// TODO: recreate all drawables that belong to this planet
     // Hint: not all drawables need to be recreated
     for (auto &i: _children) {
         i->recreate();
@@ -81,11 +60,6 @@ void Planet::recreate() {
 
 
 void Planet::draw(glm::mat4 projection_matrix) const {
-
-    /// TODO: replace this with your code
-
-    /// TODO: call draw on all drawables that belong to the planet
-
     if (_program == 0) {
         std::cerr << "Planet" << _name << "not initialized. Call init() first." << std::endl;
         return;
@@ -190,9 +164,6 @@ void Planet::addChild(std::shared_ptr<Planet> child) {
 }
 
 void Planet::createObject() {
-
-    /// TODO replace with your code
-
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> texcoords;
@@ -243,8 +214,6 @@ void Planet::createObject() {
 
     // check for errors
     VERIFY(CG::checkError());
-
-    // Hint: save the number of vertices for drawing
 }
 
 std::string Planet::getVertexShader() const {

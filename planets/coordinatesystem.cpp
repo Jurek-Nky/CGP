@@ -1,19 +1,12 @@
 #include <GL/glew.h>
-
 #include "coordinatesystem.h"
-
 #include <vector>
-
 #include <glm/vec3.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
-
 #include "glbase/gltool.hpp"
 
-#include "gui/config.h"
-
-CoordinateSystem::CoordinateSystem(std::string name) :
-        Drawable(name) {
+CoordinateSystem::CoordinateSystem(std::string name) : Drawable(name) {
 
 }
 
@@ -46,8 +39,7 @@ void CoordinateSystem::draw(glm::mat4 projection_matrix) const {
 }
 
 void CoordinateSystem::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
-    /// TODO: your code here
-   _modelViewMatrix = modelViewMatrix;
+    _modelViewMatrix = modelViewMatrix;
 }
 
 std::string CoordinateSystem::getVertexShader() const {
@@ -65,16 +57,16 @@ void CoordinateSystem::createObject() {
     // fill vectors with data
 
     for (int i = -50; i < 50; ++i) {
-            positions.emplace_back(i * 2,0,100);
-            positions.emplace_back(i*2,0,-100);
-            indices.push_back(positions.size()-2);
-            indices.push_back(positions.size()-1);
+        positions.emplace_back(i * 2, 0, 100);
+        positions.emplace_back(i * 2, 0, -100);
+        indices.push_back(positions.size() - 2);
+        indices.push_back(positions.size() - 1);
     }
     for (int i = -50; i < 50; ++i) {
-        positions.emplace_back(100,0,i * 2);
-        positions.emplace_back(-100,0,i * 2);
-        indices.push_back(positions.size()-2);
-        indices.push_back(positions.size()-1);
+        positions.emplace_back(100, 0, i * 2);
+        positions.emplace_back(-100, 0, i * 2);
+        indices.push_back(positions.size() - 2);
+        indices.push_back(positions.size() - 1);
     }
 
     // Set up a vertex array object for the geometry
@@ -104,7 +96,8 @@ void CoordinateSystem::createObject() {
     glDeleteBuffers(1, &index_buffer);
 
     // check for errors
-    VERIFY(CG::checkError());   glDrawArrays( GL_POINTS, 0, 4);
+    VERIFY(CG::checkError());
+    glDrawArrays(GL_POINTS, 0, 4);
 
 
 }

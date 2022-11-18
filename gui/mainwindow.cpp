@@ -6,9 +6,7 @@
 
 #include "gui/config.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-        QMainWindow(parent),
-        ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     // setup ui elements
     ui->setupUi(this);
 
@@ -32,38 +30,38 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->sliderAnimationSpeed->setTickInterval(10);
     this->ui->sliderAnimationSpeed->setValue(Config::animationSpeed);
 
-    connect(this->ui->checkBoxDeathStarActive, SIGNAL(clicked(bool)),this, SLOT(setDeathStarActive(bool)));
-    connect(this->ui->checkBoxDeathStarPreview, SIGNAL(clicked(bool)),this, SLOT(setDeathStarPreview(bool)));
-    connect(this->ui->sliderDeathStarLaserLen, SIGNAL(valueChanged(int)),this, SLOT(setDeathStarLaserLen(int)));
-    this->ui->sliderDeathStarLaserLen->setRange(1,20);
+    connect(this->ui->checkBoxDeathStarActive, SIGNAL(clicked(bool)), this, SLOT(setDeathStarActive(bool)));
+    connect(this->ui->checkBoxDeathStarPreview, SIGNAL(clicked(bool)), this, SLOT(setDeathStarPreview(bool)));
+    connect(this->ui->sliderDeathStarLaserLen, SIGNAL(valueChanged(int)), this, SLOT(setDeathStarLaserLen(int)));
+    this->ui->sliderDeathStarLaserLen->setRange(1, 20);
     this->ui->sliderDeathStarLaserLen->setTickPosition(QSlider::TicksBothSides);
     this->ui->sliderDeathStarLaserLen->setTickInterval(2);
-    connect(this->ui->sliderDeathStarLaserRad, SIGNAL(valueChanged(int)),this, SLOT(setDeathStarLaserRad(int)));
-    this->ui->sliderDeathStarLaserRad->setRange(1,20);
+    connect(this->ui->sliderDeathStarLaserRad, SIGNAL(valueChanged(int)), this, SLOT(setDeathStarLaserRad(int)));
+    this->ui->sliderDeathStarLaserRad->setRange(1, 20);
     this->ui->sliderDeathStarLaserRad->setTickPosition(QSlider::TicksBothSides);
     this->ui->sliderDeathStarLaserRad->setTickInterval(2);
 
-    connect(this->ui->checkBoxPathPlanet, SIGNAL(clicked(bool)),this, SLOT(setPathActive(bool)));
-    connect(this->ui->selectPathPlanet, SIGNAL(highlighted(int)),this, SLOT(setPathPlanet(int)));
-    this->ui->selectPathPlanet->addItem("Erde",0);
-    this->ui->selectPathPlanet->addItem("Mond",1);
-    this->ui->selectPathPlanet->addItem("Sonne",2);
-    this->ui->selectPathPlanet->addItem("Merkur",3);
-    this->ui->selectPathPlanet->addItem("Venus",4);
-    this->ui->selectPathPlanet->addItem("Mars",5);
-    this->ui->selectPathPlanet->addItem("Jupiter",6);
-    this->ui->selectPathPlanet->addItem("Saturn",7);
-    this->ui->selectPathPlanet->addItem("Io",8);
+    connect(this->ui->checkBoxPathPlanet, SIGNAL(clicked(bool)), this, SLOT(setPathActive(bool)));
+    connect(this->ui->selectPathPlanet, SIGNAL(currentIndexChanged(int)), this, SLOT(setPathPlanet(int)));
+    this->ui->selectPathPlanet->addItem("Erde", 0);
+    this->ui->selectPathPlanet->addItem("Mond", 1);
+    this->ui->selectPathPlanet->addItem("Sonne", 2);
+    this->ui->selectPathPlanet->addItem("Merkur", 3);
+    this->ui->selectPathPlanet->addItem("Venus", 4);
+    this->ui->selectPathPlanet->addItem("Mars", 5);
+    this->ui->selectPathPlanet->addItem("Jupiter", 6);
+    this->ui->selectPathPlanet->addItem("Saturn", 7);
+    this->ui->selectPathPlanet->addItem("Io", 8);
     this->ui->selectPathPlanet->addItem("Europa", 9);
     this->ui->selectPathPlanet->addItem("Ganymed", 10);
     this->ui->selectPathPlanet->addItem("Callisto", 11);
 
-    connect(this->ui->spinnerU, SIGNAL(valueChanged(int)),this, SLOT(setResolutionU(int)));
+    connect(this->ui->spinnerU, SIGNAL(valueChanged(int)), this, SLOT(setResolutionU(int)));
     this->ui->spinnerU->setValue(Config::resolutionU);
-    this->ui->spinnerU->setRange(4,1000);
+    this->ui->spinnerU->setRange(4, 1000);
     connect(this->ui->spinnerV, SIGNAL(valueChanged(int)), this, SLOT(setResolutionV(int)));
     this->ui->spinnerV->setValue(Config::resolutionV);
-    this->ui->spinnerV->setRange(2,1000);
+    this->ui->spinnerV->setRange(2, 1000);
     connect(this->ui->spinnerRing, SIGNAL(valueChanged(int)), this, SLOT(setResolutionRing(int)));
     this->ui->spinnerRing->setValue(Config::resolutionRing);
     this->ui->spinnerRing->setRange(4, 1000);
@@ -94,13 +92,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-
 void MainWindow::setLocalRotation(bool value) {
     Config::localRotationEnable = value;
 }
 
 void MainWindow::setGlobalRotation(bool value) {
-   Config::globalRotationEnable = value;
+    Config::globalRotationEnable = value;
 }
 
 void MainWindow::setGrid(bool value) {
@@ -142,23 +139,16 @@ void MainWindow::setDeathStarLaserRad(int value) {
 }
 
 void MainWindow::setPathActive(bool value) {
-//    int planetIndex = this->ui->selectPathPlanet->currentIndex();
-//    Config::planetPathEnable[planetIndex] = value;
     if (value) {
         Config::currentPathPlanet = this->ui->selectPathPlanet->currentText().toStdString();
         return;
     }
-   Config::currentPathPlanet = "";
+    Config::currentPathPlanet = "";
 }
 
 void MainWindow::setPathPlanet(int value) {
-//    if (Config::planetPathEnable[value]){
-//        this->ui->checkBoxPathPlanet->setCheckState(Qt::Checked);
-//        return;
-//    }
-//    this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
-
-this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
+    this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
+    Config::currentPathPlanet = "";
 }
 
 void MainWindow::setResolutionU(int value) {
@@ -173,8 +163,8 @@ void MainWindow::setResolutionRing(int value) {
     Config::resolutionRing = value;
 }
 
-void MainWindow::resetCam(){
-    Config::viewPoint = glm::vec3(0,0,5);
-    Config::viewPointCenter = glm::vec3 (0,0,0);
+void MainWindow::resetCam() {
+    Config::viewPoint = glm::vec3(0, 0, 5);
+    Config::viewPointCenter = glm::vec3(0, 0, 0);
 }
 
