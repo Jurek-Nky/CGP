@@ -101,7 +101,7 @@ void GLWidget::initializeGL() {
 
     // make sure the context is current
     makeCurrent();
-    
+
     _skybox->init();
     _earth->init();
     _coordSystem->init();
@@ -119,18 +119,20 @@ void GLWidget::resizeGL(int width, int height) {
 void GLWidget::paintGL() {
     // Render: set up view
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
 
+    // calculating aspect ratio for projection matrix
     float aspectRatio = Config::windowResolution[0] / Config::windowResolution[1];
     glm::mat4 projection_matrix = glm::perspective(glm::radians(50.0f),
                                                    aspectRatio,
                                                    0.1f, 500.0f);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    
+
     glDisable(GL_DEPTH_TEST);
     _skybox->draw(projection_matrix);
     glEnable(GL_DEPTH_TEST);
-    
+
     _earth->draw(projection_matrix);
     if (Config::coordSysEnable) {
         _coordSystem->draw(projection_matrix);
@@ -138,14 +140,17 @@ void GLWidget::paintGL() {
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
+    /// TODO implement MiddleClick movement mode
     if (event->button() & Qt::LeftButton)
         _moveMode = 1;
     else if (event->button() & Qt::MiddleButton)
         _moveMode = 2;
+    // saving mouse position for delta calculation
     _mousePos = glm::vec2(event->pos().x(), event->pos().y());
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
+    // resetting mouse movement mode
     _moveMode = 0;
 }
 
@@ -163,25 +168,25 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void GLWidget::leftClickMove(const glm::vec2 &mouseDelta) {
-
+    // defining vertical vector for horizontal mouse movement
     glm::vec3 UP = glm::vec3(0, 1, 0);
 
     // rotating viewpoint around UP vector
-    Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.x * 0.05f, UP)) * Config::viewPoint;
+    Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.x * 0.01f, UP)) * Config::viewPoint;
 
-    // rotating viewpoint around normal vector of viewpoint and Up vector
+    // calculating normal vector of UP and viewpoint using the cross-product
     glm::vec3 rotationVec = glm::cross(UP, Config::viewPoint);
+    // rotating viewpoint around the new vector for vertical mouse movement
     Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.y * 0.01f, rotationVec)) * Config::viewPoint;
 }
 
 void GLWidget::middleClickMove(glm::vec2 mouseDelta) {
+    /// TODO implement middleClickMovement
     return;
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
-    Config::camZoom += event->angleDelta().ry() * 0.01;
-    // Hint: you can use:
-    // event->angleDelta().ry()
+    Config::camZoom += event->angleDelta().ry() * 0.01f;
 }
 
 
@@ -193,7 +198,7 @@ void GLWidget::animateGL() {
     float timeElapsedMs = _stopWatch.nsecsElapsed() / 1000000.0f;
     // restart stopwatch for next update
     _stopWatch.restart();
-    
+
     // calculate current modelViewMatrix for the default camera
     glm::mat4 modelViewMatrix = glm::lookAt(
             glm::vec3(
@@ -211,5 +216,3 @@ void GLWidget::animateGL() {
     // update the widget (do not remove this!)
     update();
 }
-
-

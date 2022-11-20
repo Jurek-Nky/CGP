@@ -39,6 +39,7 @@ void CoordinateSystem::draw(glm::mat4 projection_matrix) const {
 }
 
 void CoordinateSystem::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
+    // saving the given modelViewMatrix for later use in the shader
     _modelViewMatrix = modelViewMatrix;
 }
 
@@ -51,11 +52,11 @@ std::string CoordinateSystem::getFragmentShader() const {
 }
 
 void CoordinateSystem::createObject() {
+    // creating positions and indices vectors
     std::vector<glm::vec3> positions;
     std::vector<unsigned int> indices;
 
     // fill vectors with data
-
     for (int i = -50; i < 50; ++i) {
         positions.emplace_back(i * 2, 0, 100);
         positions.emplace_back(i * 2, 0, -100);

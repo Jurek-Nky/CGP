@@ -4,6 +4,7 @@
 Saturn::Saturn(std::string name, float radius, float distance, float hoursPerDay, float daysPerYear,
                std::string textureLocation) : Planet(name, radius, distance, hoursPerDay, daysPerYear,
                                                      textureLocation) {
+    // create ring object around the planet
     _ring = std::make_shared<Ring>(name + "Ring", _radius);
 }
 

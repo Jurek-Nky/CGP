@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // setup ui elements
     ui->setupUi(this);
 
-    // connect ui elements to slots
+    // connect ui elements to slots and modifying some behaviours
     connect(this->ui->checkBoxLocalRotation, SIGNAL(clicked(bool)), this, SLOT(setLocalRotation(bool)));
     this->ui->checkBoxLocalRotation->setChecked(Config::localRotationEnable);
     connect(this->ui->checkBoxGlobalRotation, SIGNAL(clicked(bool)), this, SLOT(setGlobalRotation(bool)));
@@ -43,18 +43,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(this->ui->checkBoxPathPlanet, SIGNAL(clicked(bool)), this, SLOT(setPathActive(bool)));
     connect(this->ui->selectPathPlanet, SIGNAL(currentIndexChanged(int)), this, SLOT(setPathPlanet(int)));
-    this->ui->selectPathPlanet->addItem("Erde", 0);
-    this->ui->selectPathPlanet->addItem("Mond", 1);
-    this->ui->selectPathPlanet->addItem("Sonne", 2);
-    this->ui->selectPathPlanet->addItem("Merkur", 3);
-    this->ui->selectPathPlanet->addItem("Venus", 4);
-    this->ui->selectPathPlanet->addItem("Mars", 5);
-    this->ui->selectPathPlanet->addItem("Jupiter", 6);
-    this->ui->selectPathPlanet->addItem("Saturn", 7);
-    this->ui->selectPathPlanet->addItem("Io", 8);
-    this->ui->selectPathPlanet->addItem("Europa", 9);
-    this->ui->selectPathPlanet->addItem("Ganymed", 10);
-    this->ui->selectPathPlanet->addItem("Callisto", 11);
+    this->ui->selectPathPlanet->addItem("Mond");
+    this->ui->selectPathPlanet->addItem("Sonne");
+    this->ui->selectPathPlanet->addItem("Merkur");
+    this->ui->selectPathPlanet->addItem("Venus");
+    this->ui->selectPathPlanet->addItem("Mars");
+    this->ui->selectPathPlanet->addItem("Jupiter");
+    this->ui->selectPathPlanet->addItem("Saturn");
+    this->ui->selectPathPlanet->addItem("Io");
+    this->ui->selectPathPlanet->addItem("Europa");
+    this->ui->selectPathPlanet->addItem("Ganymed");
+    this->ui->selectPathPlanet->addItem("Callisto");
 
     connect(this->ui->spinnerU, SIGNAL(valueChanged(int)), this, SLOT(setResolutionU(int)));
     this->ui->spinnerU->setValue(Config::resolutionU);
@@ -84,6 +83,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             } else {
                 showFullScreen();
             }
+            break;
+        case Qt::Key_Space:
+            Config::globalRotationEnable = !Config::globalRotationEnable;
+            this->ui->checkBoxGlobalRotation->setEnabled(Config::globalRotationEnable);
             break;
         case Qt::Key_Escape:
         case Qt::Key_Q:
@@ -147,7 +150,10 @@ void MainWindow::setPathActive(bool value) {
 }
 
 void MainWindow::setPathPlanet(int value) {
-    this->ui->checkBoxPathPlanet->setCheckState(Qt::Unchecked);
+    if (this->ui->checkBoxPathPlanet->isChecked()) {
+        Config::currentPathPlanet = this->ui->selectPathPlanet->currentText().toStdString();
+        return;
+    }
     Config::currentPathPlanet = "";
 }
 
