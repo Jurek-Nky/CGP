@@ -55,7 +55,7 @@ void Earth::draw(glm::mat4 projection_matrix) {
     glDrawElements(GL_TRIANGLES, Config::resolutionV * Config::resolutionU * 6, GL_UNSIGNED_INT, 0);
 
 
-    // changing shader to change color of grid
+    // if grid is enabled draw a grid around all triangles of the sphere
     if (Config::gridEnable) {
         glDisable(GL_DEPTH_TEST);
         colorEnable = 1;
@@ -65,6 +65,7 @@ void Earth::draw(glm::mat4 projection_matrix) {
         glEnable(GL_DEPTH_TEST);
     }
 
+    //draw all children
     for (const auto &i: _children) {
         i->draw(projection_matrix);
     }
@@ -79,7 +80,7 @@ void Earth::draw(glm::mat4 projection_matrix) {
 void Earth::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     // check if resolution changed and recreate object
     if (_oldResolutionV != Config::resolutionV || _oldResolutionU != Config::resolutionU) {
-        createObject();
+        recreate();
     }
 
     // calculate new local rotation
@@ -95,10 +96,12 @@ void Earth::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     _localRotation = std::fmod(_localRotation, 360.0f);
     _globalRotation = std::fmod(_globalRotation, 360.f);
 
+    // calculating new x and y for the translation
     float x = _center.x + (_distance * glm::cos(glm::radians(_globalRotation)));
     float y = _center.z + (_distance * glm::sin(glm::radians(_globalRotation)));
     _modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(x, 0, y));
 
+    // updating center of all children and call update
     for (const auto &i: _children) {
         // updating center point for all children
         i->_center = glm::vec3(x, 0, y);

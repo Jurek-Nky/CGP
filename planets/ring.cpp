@@ -60,14 +60,19 @@ std::string Ring::getFragmentShader() const {
 }
 
 void Ring::createObject() {
+    // declare all needed vectors for creation of the geometry
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> texcoords;
     std::vector<unsigned int> indices;
 
+    // filling vectors with data using glBase library
     geom_disk(positions, normals, texcoords, indices, 0.85f, Config::resolutionRing);
 
+    // saving old ring resolution
     _oldResolutionRing = Config::resolutionRing;
+
+    // scaling and rotating the disk around the x-axis
     glm::vec3 axis = glm::vec3(1, 0, 0);
     for (auto &position: positions) {
         position = position * _radius * 1.5f;
@@ -87,6 +92,7 @@ void Ring::createObject() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
+    // fill normals buffer with data
     GLuint normals_buffer;
     glGenBuffers(1, &normals_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, normals_buffer);
@@ -97,6 +103,7 @@ void Ring::createObject() {
 
     // Hint: the texture coordinates buffer is missing
 
+    // fill index buffer with data
     GLuint index_buffer;
     glGenBuffers(1, &index_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
