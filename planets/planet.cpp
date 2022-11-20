@@ -32,13 +32,7 @@ Planet::Planet(std::string name, float radius, float distance, float hoursPerDay
 void Planet::init() {
     Drawable::init();
     _path->init();
-    if (_name != "Erde") {
-        _orbit->init();
-    }
-
-    if (_name == "Erde") {
-        calculatePath(_modelViewMatrix);
-    }
+    _orbit->init();
 
     for (auto &i: _children) {
         i->init();
@@ -51,10 +45,7 @@ void Planet::recreate() {
     for (auto &i: _children) {
         i->recreate();
     }
-    _path->recreate();
-    if (_name != "Erde") {
-        _orbit->recreate();
-    }
+    _orbit->recreate();
 }
 
 
@@ -75,7 +66,7 @@ void Planet::draw(glm::mat4 projection_matrix) const {
                        glm::value_ptr(projection_matrix));
     glUniformMatrix4fv(glGetUniformLocation(_program, "modelview_matrix"), 1, GL_FALSE,
                        glm::value_ptr(_modelViewMatrix));
-    //
+    // adding parameter to shader
     GLuint colorWhite = 0;
     glUniform1i(glGetUniformLocation(_program, "colorEnable"), colorWhite);
     // call draw
@@ -99,7 +90,7 @@ void Planet::draw(glm::mat4 projection_matrix) const {
         _path->draw(projection_matrix);
     }
 
-    if (Config::orbitEnable && _name != "Erde") {
+    if (Config::orbitEnable) {
         _orbit->draw(projection_matrix);
     }
 
@@ -139,10 +130,8 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
         // calling update for all children
         i->update(elapsedTimeMs, modelViewMatrix);
     }
-    if (_name != "Erde") {
-        _orbit->_center = _center;
-        _orbit->update(elapsedTimeMs, modelViewMatrix);
-    }
+    _orbit->_center = _center;
+    _orbit->update(elapsedTimeMs, modelViewMatrix);
 
     // rotate around y-axis
     _modelViewMatrix = glm::rotate(_modelViewMatrix, glm::radians(_localRotation), glm::vec3(0, 1, 0));

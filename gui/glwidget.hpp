@@ -17,6 +17,7 @@
 #include <QTimer>
 #include "glm/vec2.hpp"
 #include "glm/detail/type_vec3.hpp"
+#include "planets/earth.h"
 
 /*
  * Forward decleration
@@ -41,7 +42,7 @@ private:
     QTimer _updateTimer;        /**< Used for regular frame updates */
     QElapsedTimer _stopWatch;   /**< Measures time between updates */
 
-    std::shared_ptr<Planet> _earth;                 /**< The root element of the planet hierarchy */
+    std::shared_ptr<Earth> _earth;                 /**< The root element of the planet hierarchy */
     std::shared_ptr<Skybox> _skybox;                /**< Skybox (not part of the hierarchy */
     std::shared_ptr<CoordinateSystem> _coordSystem; /**< Coordinate system (not part of the hierarchy) */
 

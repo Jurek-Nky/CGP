@@ -3,8 +3,7 @@
 
 #include "planets/drawable.h"
 
-class CoordinateSystem : public Drawable
-{
+class CoordinateSystem : public Drawable {
 public:
     CoordinateSystem(std::string name = "Coordinate System");
 

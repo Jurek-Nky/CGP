@@ -26,6 +26,8 @@ public:
            std::string textureLocation = ":/res/images/earth.bmp"
     );
 
+    glm::vec3 _center;
+
     /**
      * @see Drawable::init()
      */
@@ -100,7 +102,6 @@ protected:
     std::shared_ptr<Sun> _sun;      /**< the sun that illuminates this planet */
     std::shared_ptr<Cone> _laser;   /**< the death star laser that could illuminate the planet */
 
-    glm::vec3 _center;
 
     /**
      * @see Drawable::createObject()
