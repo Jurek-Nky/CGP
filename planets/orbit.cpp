@@ -70,7 +70,7 @@ void Orbit::createObject() {
 
     glm::vec3 axis = glm::vec3(1, 0, 0);
     for (auto &position: positions) {
-        position = position * _radius * 1.5f;
+        position = position * _radius;
         position = glm::mat3(glm::rotate(glm::half_pi<float>(), axis)) * position;
     }
 
