@@ -24,6 +24,7 @@
 #include "planets/planet.h"
 #include "planets/sun.h"
 #include "planets/skybox.h"
+#include "planets/saturn.h"
 
 GLWidget::GLWidget(QWidget *&parent) : QOpenGLWidget(parent),//static_cast<QWidget*>(0)),
                                        _updateTimer(this), _stopWatch() {
@@ -49,7 +50,7 @@ GLWidget::GLWidget(QWidget *&parent) : QOpenGLWidget(parent),//static_cast<QWidg
     auto venus = std::make_shared<Planet>("Venus", 0.34, 3.0, 2802.0, 100, ":/res/images/venus.bmp");
     auto mars = std::make_shared<Planet>("Mars", 0.453, 10.6, 24.7, 700, ":/res/images/mars.bmp");
     auto jupiter = std::make_shared<Planet>("Jupiter", 0.453, 13.32, 9.9, 3500, ":/res/images/jupiter.bmp");
-    auto saturn = std::make_shared<Planet>("Saturn", 0.453, 15.92, 10.6, 10500, ":/res/images/saturn.bmp");
+    auto saturn = std::make_shared<Saturn>("Saturn", 0.453, 15.92, 10.6, 10500, ":/res/images/saturn.bmp");
 
     // jupiter moons
     auto io = std::make_shared<Planet>("Io", 0.036, 0.8, 10.6, 30, ":/res/images/moon.bmp");

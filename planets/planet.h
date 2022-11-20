@@ -15,7 +15,6 @@ class Sun;
 
 class Cone;
 
-class Ring;
 
 class Planet : public Drawable {
 public:
@@ -97,10 +96,11 @@ protected:
 
     std::shared_ptr<Orbit> _orbit;  /**< the local orbit of this planet */
     std::shared_ptr<Path> _path;    /**< the global path of this orbit */
-    std::shared_ptr<Ring> _ring;
 
     std::shared_ptr<Sun> _sun;      /**< the sun that illuminates this planet */
     std::shared_ptr<Cone> _laser;   /**< the death star laser that could illuminate the planet */
+
+    glm::vec3 _center;
 
     /**
      * @see Drawable::createObject()
@@ -163,8 +163,6 @@ protected:
      * Hint: This should only be called once
      */
     virtual void createPath();
-
-    glm::vec3 _center;
 };
 
 #endif // PLANET_H

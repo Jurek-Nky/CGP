@@ -68,7 +68,7 @@ add_executable(tychobrahe
         planets/skybox.cpp
         planets/sun.cpp
         planets/ring.cpp
-        )
+        planets/saturn.cpp planets/saturn.h)
 
 include_directories(${CMAKE_SOURCE_DIR}/glbase ${OPENGL_INCLUDE_DIR})
 
