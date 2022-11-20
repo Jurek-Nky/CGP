@@ -89,7 +89,6 @@ void Path::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 }
 
 void Path::addPosition(glm::vec3 position) {
-    /// TODO: your code here
     _positions.push_back(position);
     _indices.push_back(_positions.size() - 1);
 }
