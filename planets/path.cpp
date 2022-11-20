@@ -79,7 +79,6 @@ void Path::createObject() {
 }
 
 void Path::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
-    /// TODO: your code here
     _modelViewMatrix = glm::lookAt(
             glm::vec3(
                     Config::viewPoint[0] * Config::camZoom,
