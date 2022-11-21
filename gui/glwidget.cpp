@@ -24,7 +24,6 @@
 #include "planets/planet.h"
 #include "planets/sun.h"
 #include "planets/skybox.h"
-#include "planets/saturn.h"
 
 GLWidget::GLWidget(QWidget *&parent) : QOpenGLWidget(parent),//static_cast<QWidget*>(0)),
                                        _updateTimer(this), _stopWatch() {
@@ -42,7 +41,7 @@ GLWidget::GLWidget(QWidget *&parent) : QOpenGLWidget(parent),//static_cast<QWidg
      * DO NOT CHANGE days/year *
      * *************************/
     // radius, distance, h/day, days/year
-    _earth = std::make_shared<Earth>("Erde", 1.0, 0.0, 24.0, 1, ":/res/images/earth.bmp");
+    _earth = std::make_shared<Planet>("Erde", 1.0, 0.0, 24.0, 1, ":/res/images/earth.bmp");
     auto moon = std::make_shared<Planet>("Mond", 0.215, 2.0, 27.3, 27, ":/res/images/moon.bmp");
     auto sun = std::make_shared<Sun>("Sonne", 1.2, 6.0, 50.0, 350, ":/res/images/sun.bmp");
 
@@ -50,7 +49,7 @@ GLWidget::GLWidget(QWidget *&parent) : QOpenGLWidget(parent),//static_cast<QWidg
     auto venus = std::make_shared<Planet>("Venus", 0.34, 3.0, 2802.0, 100, ":/res/images/venus.bmp");
     auto mars = std::make_shared<Planet>("Mars", 0.453, 10.6, 24.7, 700, ":/res/images/mars.bmp");
     auto jupiter = std::make_shared<Planet>("Jupiter", 0.453, 13.32, 9.9, 3500, ":/res/images/jupiter.bmp");
-    auto saturn = std::make_shared<Saturn>("Saturn", 0.453, 15.92, 10.6, 10500, ":/res/images/saturn.bmp");
+    auto saturn = std::make_shared<Planet>("Saturn", 0.453, 15.92, 10.6, 10500, ":/res/images/saturn.bmp");
 
     // jupiter moons
     auto io = std::make_shared<Planet>("Io", 0.036, 0.8, 10.6, 30, ":/res/images/moon.bmp");
@@ -102,6 +101,7 @@ void GLWidget::initializeGL() {
     // make sure the context is current
     makeCurrent();
 
+    _skybox->init();
     _earth->init();
     _coordSystem->init();
 }
@@ -120,13 +120,16 @@ void GLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    // calculating aspect ratio for projection matrix
     float aspectRatio = Config::windowResolution[0] / Config::windowResolution[1];
     glm::mat4 projection_matrix = glm::perspective(glm::radians(50.0f),
                                                    aspectRatio,
                                                    0.1f, 500.0f);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    glDisable(GL_DEPTH_TEST);
+    _skybox->draw(projection_matrix);
+    glEnable(GL_DEPTH_TEST);
 
     // drawing all objects
     _earth->draw(projection_matrix);
@@ -136,17 +139,14 @@ void GLWidget::paintGL() {
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
-    /// TODO implement MiddleClick movement mode
     if (event->button() & Qt::LeftButton)
         _moveMode = 1;
     else if (event->button() & Qt::MiddleButton)
         _moveMode = 2;
-    // saving mouse position for delta calculation
     _mousePos = glm::vec2(event->pos().x(), event->pos().y());
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
-    // resetting mouse movement mode
     _moveMode = 0;
 }
 
@@ -164,25 +164,25 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void GLWidget::leftClickMove(const glm::vec2 &mouseDelta) {
-    // defining vertical vector for horizontal mouse movement
+
     glm::vec3 UP = glm::vec3(0, 1, 0);
 
     // rotating viewpoint around UP vector
-    Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.x * 0.01f, UP)) * Config::viewPoint;
+    Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.x * 0.05f, UP)) * Config::viewPoint;
 
-    // calculating normal vector of UP and viewpoint using the cross-product
+    // rotating viewpoint around normal vector of viewpoint and Up vector
     glm::vec3 rotationVec = glm::cross(UP, Config::viewPoint);
-    // rotating viewpoint around the new vector for vertical mouse movement
     Config::viewPoint = glm::mat3(glm::rotate(mouseDelta.y * 0.01f, rotationVec)) * Config::viewPoint;
 }
 
 void GLWidget::middleClickMove(glm::vec2 mouseDelta) {
-    /// TODO implement middleClickMovement
     return;
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
-    Config::camZoom += event->angleDelta().ry() * 0.01f;
+    Config::camZoom += event->angleDelta().ry() * 0.01;
+    // Hint: you can use:
+    // event->angleDelta().ry()
 }
 
 
@@ -211,3 +211,5 @@ void GLWidget::animateGL() {
     // update the widget (do not remove this!)
     update();
 }
+
+

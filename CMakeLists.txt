@@ -36,6 +36,7 @@ qt5_wrap_ui(ui_mainwindow.h gui/mainwindow.ui)
 # List your qrc files here #
 # (if you need any)        #
 ############################
+qt5_add_resources(ResourceSources images.qrc)
 qt5_add_resources(ResourceSources shader.qrc)
 qt5_add_resources(ResourceSources style.qrc)
 
