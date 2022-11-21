@@ -14,7 +14,6 @@
 #include "gui/config.h"
 #include "planets/cone.h"
 #include "planets/sun.h"
-#include "planets/ring.h"
 #include "planets/orbit.h"
 #include "planets/path.h"
 #include "glbase/geometries.hpp"
