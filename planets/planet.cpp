@@ -18,21 +18,38 @@
 #include "planets/orbit.h"
 #include "planets/path.h"
 #include "glbase/geometries.hpp"
+#include "glm/ext.hpp"
+#include "glm/gtx/string_cast.hpp"
 
-Planet::Planet(std::string name, float radius, float distance, float hoursPerDay, unsigned int daysPerYear,
-               std::string textureLocation) : Drawable(name), _radius(radius), _distance(distance), _localRotation(0),
-                                              _localRotationSpeed(0), _globalRotation(0), _globalRotationSpeed(0),
-                                              _daysPerYear(daysPerYear) {
+Planet::Planet(std::string name,
+               float radius,
+               float distance,
+               float hoursPerDay,
+               unsigned int daysPerYear,
+               std::string textureLocation) :
+                
+                Drawable(name),
+                _radius(radius),
+                _distance(distance),
+                _localRotation(0),
+                _localRotationSpeed(0),
+                _globalRotation(0),
+                _globalRotationSpeed(0),
+                _daysPerYear(daysPerYear) {
+                    
     _localRotationSpeed = 1.0f / hoursPerDay;
     _globalRotationSpeed = 1.0f / daysPerYear;
-
+    _textureLocation = textureLocation;
     _orbit = std::make_shared<Orbit>(name + " Orbit", _distance);
     _path = std::make_shared<Path>(name + " Pfad");
     _ring = std::make_shared<Ring>(name + "Ringg", _radius);
 }
 
 void Planet::init() {
+    
     Drawable::init();
+    
+    Planet::texture = loadTexture(_textureLocation);
     _path->init();
     if (_name != "Erde") {
         _orbit->init();
@@ -75,8 +92,11 @@ void Planet::draw(glm::mat4 projection_matrix) const {
 
     // Load program
     glUseProgram(_program);
-
-    // bin vertex array object
+    
+    // bind texture
+    glBindTexture(GL_TEXTURE_2D, texture);
+    
+    // bind vertex array object
     glBindVertexArray(_vertexArrayObject);
 
     // set parameter
@@ -85,6 +105,8 @@ void Planet::draw(glm::mat4 projection_matrix) const {
     glUniformMatrix4fv(glGetUniformLocation(_program, "modelview_matrix"), 1, GL_FALSE,
                        glm::value_ptr(_modelViewMatrix));
     //
+    glUniform3fv(glGetUniformLocation(_program, "lightpos"), 1, glm::value_ptr(Planet::lightpos));
+    glUniform3fv(glGetUniformLocation(_program, "model"), 1, glm::value_ptr(Planet::_origin));
     GLuint colorWhite = 0;
     glUniform1i(glGetUniformLocation(_program, "colorEnable"), colorWhite);
     // call draw
@@ -97,6 +119,8 @@ void Planet::draw(glm::mat4 projection_matrix) const {
         colorWhite = 1;
         glUniform1i(glGetUniformLocation(_program, "colorEnable"), colorWhite);
 
+        
+        //glDrawArrays(GL_LINES, 0, Config::resolutionU * Config::resolutionV * 6);
         glDrawElements(GL_LINES, Config::resolutionU * Config::resolutionV * 6, GL_UNSIGNED_INT, 0);
         glEnable(GL_DEPTH_TEST);
     }
@@ -144,6 +168,9 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 
     float x = _center.x + (_distance * glm::cos(glm::radians(_globalRotation)));
     float y = _center.z + (_distance * glm::sin(glm::radians(_globalRotation)));
+    
+    _origin = glm::vec3(x, 0, y);
+    
     _modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(x, 0, y));
 
     for (const auto &i: _children) {
@@ -156,6 +183,7 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
         _orbit->_center = _center;
         _orbit->update(elapsedTimeMs, modelViewMatrix);
     }
+    setLights(_sun, _laser);
 
     // rotate around y-axis
     _modelViewMatrix = glm::rotate(_modelViewMatrix, glm::radians(_localRotation), glm::vec3(0, 1, 0));
@@ -171,6 +199,9 @@ void Planet::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
 void Planet::setLights(std::shared_ptr<Sun> sun, std::shared_ptr<Cone> laser) {
     _sun = sun;
     _laser = laser;
+    lightpos = _sun->getPosition();
+    
+    //std::cout << glm::to_string(lightpos) << std::endl;
     for (auto child: _children)
         child->setLights(sun, laser);
 }
@@ -180,6 +211,7 @@ void Planet::addChild(std::shared_ptr<Planet> child) {
 }
 
 void Planet::createObject() {
+    
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> texcoords;
@@ -194,8 +226,9 @@ void Planet::createObject() {
     };
 
     // Set up a vertex array object for the geometry
-    if (_vertexArrayObject == 0)
+    if (_vertexArrayObject == 0){
         glGenVertexArrays(1, &_vertexArrayObject);
+    }
     glBindVertexArray(_vertexArrayObject);
 
     // fill vertex array object with data
@@ -212,7 +245,15 @@ void Planet::createObject() {
     glBufferData(GL_ARRAY_BUFFER, normals.size() * 3 * sizeof(float), normals.data(), GL_STATIC_DRAW);
     GLintptr normalsOffset = 3 * sizeof(float);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *) normalsOffset);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    
+    GLuint texcoords_buffer;
+    glGenBuffers(1, &texcoords_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, texcoords_buffer);
+    glBufferData(GL_ARRAY_BUFFER, texcoords.size() * 2 * sizeof(float), texcoords.data(), GL_STATIC_DRAW);
+    GLintptr texcoordsOffset = 6 * sizeof(float);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *) texcoordsOffset);
+    glEnableVertexAttribArray(2);
 
     // Hint: the texture coordinates buffer is missing
 
@@ -227,6 +268,7 @@ void Planet::createObject() {
     glDeleteBuffers(1, &position_buffer);
     glDeleteBuffers(1, &index_buffer);
     glDeleteBuffers(1, &normals_buffer);
+    glDeleteBuffers(1, &texcoords_buffer);
 
     // check for errors
     VERIFY(CG::checkError());

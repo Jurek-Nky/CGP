@@ -24,7 +24,6 @@ public:
     virtual void update(float elapsedTimeMs, glm::mat4 modelViewMatrix) override;
 
 protected:
-
     /**
      * @see Drawable::getVertexShader()
      */
@@ -43,7 +42,8 @@ protected:
     /**
      * @brief loadTexture loads the textures for the skybox
      */
-    virtual void loadTexture();
+    virtual GLuint loadTexture(std::string path) override;
+    GLuint cubemap_texture;
 };
 
 #endif // SKYBOX_H

@@ -100,7 +100,8 @@ void GLWidget::initializeGL() {
 
     // make sure the context is current
     makeCurrent();
-
+    
+    _skybox->init();
     _earth->init();
     _coordSystem->init();
 }
@@ -117,7 +118,6 @@ void GLWidget::resizeGL(int width, int height) {
 void GLWidget::paintGL() {
     // Render: set up view
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
 
     float aspectRatio = Config::windowResolution[0] / Config::windowResolution[1];
     glm::mat4 projection_matrix = glm::perspective(glm::radians(50.0f),
@@ -125,7 +125,11 @@ void GLWidget::paintGL() {
                                                    0.1f, 500.0f);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+    
+    glDisable(GL_DEPTH_TEST);
+    _skybox->draw(projection_matrix);
+    glEnable(GL_DEPTH_TEST);
+    
     _earth->draw(projection_matrix);
     if (Config::coordSysEnable) {
         _coordSystem->draw(projection_matrix);
@@ -188,7 +192,7 @@ void GLWidget::animateGL() {
     float timeElapsedMs = _stopWatch.nsecsElapsed() / 1000000.0f;
     // restart stopwatch for next update
     _stopWatch.restart();
-
+    
     // calculate current modelViewMatrix for the default camera
     glm::mat4 modelViewMatrix = glm::lookAt(
             glm::vec3(
@@ -199,6 +203,7 @@ void GLWidget::animateGL() {
             glm::vec3(0.0, 1.0, 0.0));
 
     // update drawables
+    _skybox->update(timeElapsedMs, modelViewMatrix);
     _earth->update(timeElapsedMs, modelViewMatrix);
     _coordSystem->update(timeElapsedMs, modelViewMatrix);
 

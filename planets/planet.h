@@ -94,13 +94,18 @@ protected:
 
     int _oldResolutionU;
     int _oldResolutionV;
-
+    
+    std::string _textureLocation;
+    GLuint texture;
+    
     std::shared_ptr<Orbit> _orbit;  /**< the local orbit of this planet */
     std::shared_ptr<Path> _path;    /**< the global path of this orbit */
     std::shared_ptr<Ring> _ring;
 
     std::shared_ptr<Sun> _sun;      /**< the sun that illuminates this planet */
-    std::shared_ptr<Cone> _laser;   /**< the death star laser that could illuminate the planet */
+    std::shared_ptr<Cone> _laser;
+    
+    glm::vec3 lightpos;/**< the death star laser that could illuminate the planet */
 
     /**
      * @see Drawable::createObject()
@@ -165,6 +170,8 @@ protected:
     virtual void createPath();
 
     glm::vec3 _center;
+    
+    glm::vec3 _origin;
 };
 
 #endif // PLANET_H
