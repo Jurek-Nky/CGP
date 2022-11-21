@@ -4,10 +4,10 @@
 
 #include "planet.h"
 
-class Earth : public Planet {
+class Earth : public Planet{
 public:
     Earth(std::string name = "Erde", float radius = 1.f, float distance = 1.f, float hoursPerDay = 1.f,
-          float daysPerYear = 1.f, std::string textureLocation = "");
+          float daysPerYear = 1.f, std::string textureLocation = ":/res/images/earth.bmp");
 
     void init() override;
 

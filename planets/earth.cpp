@@ -14,10 +14,12 @@ Earth::Earth(std::string name, float radius, float distance, float hoursPerDay, 
              std::string textureLocation) : Planet(name, radius, distance, hoursPerDay, daysPerYear, textureLocation) {
     _localRotationSpeed = 1.0f / hoursPerDay;
     _globalRotationSpeed = 1.0f / daysPerYear;
+    _textureLocation = textureLocation;
 }
 
 void Earth::init() {
     Drawable::init();
+    texture = loadTexture(_textureLocation);
     for (auto &i: _children) {
         i->init();
     }
@@ -36,11 +38,13 @@ void Earth::draw(glm::mat4 projection_matrix) {
         std::cerr << "Planet" << _name << "not initialized. Call init() first." << std::endl;
         return;
     }
-
     // Load program
     glUseProgram(_program);
 
-    // bin vertex array object
+    // bind texture
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // bind vertex array object
     glBindVertexArray(_vertexArrayObject);
 
     // set parameter
@@ -48,6 +52,8 @@ void Earth::draw(glm::mat4 projection_matrix) {
                        glm::value_ptr(projection_matrix));
     glUniformMatrix4fv(glGetUniformLocation(_program, "modelview_matrix"), 1, GL_FALSE,
                        glm::value_ptr(_modelViewMatrix));
+    glUniform3fv(glGetUniformLocation(_program, "lightpos"), 1, glm::value_ptr(Planet::lightpos));
+    glUniform3fv(glGetUniformLocation(_program, "model"), 1, glm::value_ptr(Planet::_origin));
     // adding parameter to shader
     GLuint colorEnable = 0;
     glUniform1i(glGetUniformLocation(_program, "colorEnable"), colorEnable);
@@ -65,7 +71,6 @@ void Earth::draw(glm::mat4 projection_matrix) {
         glEnable(GL_DEPTH_TEST);
     }
 
-    //draw all children
     for (const auto &i: _children) {
         i->draw(projection_matrix);
     }
@@ -100,6 +105,8 @@ void Earth::update(float elapsedTimeMs, glm::mat4 modelViewMatrix) {
     float x = _center.x + (_distance * glm::cos(glm::radians(_globalRotation)));
     float y = _center.z + (_distance * glm::sin(glm::radians(_globalRotation)));
     _modelViewMatrix = glm::translate(modelViewMatrix, glm::vec3(x, 0, y));
+
+    setLights(_sun, _laser);
 
     // updating center of all children and call update
     for (const auto &i: _children) {

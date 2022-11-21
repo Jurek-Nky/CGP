@@ -109,12 +109,8 @@ void Planet::draw(glm::mat4 projection_matrix) const {
         _path->draw(projection_matrix);
     }
 
-    if (Config::orbitEnable && _name != "Erde") {
+    if (Config::orbitEnable ) {
         _orbit->draw(projection_matrix);
-    }
-
-    if (_name == "Saturn") {
-        _ring->draw(projection_matrix);
     }
 
     // unbin vertex array object
