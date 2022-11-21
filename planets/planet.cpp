@@ -20,10 +20,21 @@
 #include "glm/ext.hpp"
 #include "glm/gtx/string_cast.hpp"
 
-Planet::Planet(std::string name, float radius, float distance, float hoursPerDay, unsigned int daysPerYear,
-               std::string textureLocation) : Drawable(name), _radius(radius), _distance(distance), _localRotation(0),
-                                              _localRotationSpeed(0), _globalRotation(0), _globalRotationSpeed(0),
-                                              _daysPerYear(daysPerYear) {
+Planet::Planet(std::string name,
+               float radius,
+               float distance,
+               float hoursPerDay,
+               unsigned int daysPerYear,
+               std::string textureLocation) :
+
+        Drawable(name),
+        _radius(radius),
+        _distance(distance),
+        _localRotation(0),
+        _localRotationSpeed(0),
+        _globalRotation(0),
+        _globalRotationSpeed(0),
+        _daysPerYear(daysPerYear) {
     _localRotationSpeed = 1.0f / hoursPerDay;
     _globalRotationSpeed = 1.0f / daysPerYear;
     _textureLocation = textureLocation;
@@ -193,7 +204,7 @@ void Planet::createObject() {
     };
 
     // Set up a vertex array object for the geometry
-    if (_vertexArrayObject == 0){
+    if (_vertexArrayObject == 0) {
         glGenVertexArrays(1, &_vertexArrayObject);
     }
     glBindVertexArray(_vertexArrayObject);
